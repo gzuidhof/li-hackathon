@@ -1,0 +1,461 @@
+DocumentSubType
+
+
+Gemeenteblad: 108275
+Onbekend: 49153
+Departementale Regelgeving: 36197
+Tijdschriften: 32880
+Regeling: 18953
+Xpert Burgerzaken: 18018
+Kamerstukken: 11053
+Krant: 8538
+Wet: 8294
+Ministeriele-regeling: 7252
+Zbo: 7249
+Blog: 6921
+Waterschapsblad: 5754
+Lexplicatie: 4238
+Xpert Inkoop en Aanbesteding: 4104
+Verdrag: 3440
+NDFR Delen: 3174
+Provinciaal blad: 2694
+Kennisbank Personen- en Familierecht: 2586
+Kamervragen: 2457
+Xpert Lokale Belastingen: 2448
+SDU Commentaar: 2277
+Beleidsregel: 2137
+Uitgaven Instituut voor Ondernemingsrecht: 2027
+Xpert Sociale Zaken: 1820
+PBM Gids: 1796
+Serie Van der Heijden Instituut: 1560
+Praktijkgids Arbeidsomstandigheden: 1519
+Xpert Rechtspositie Ambtenaren: 1354
+Module-serie: 1243
+Handelingen: 1202
+Besluiten: 1170
+Asser Serie: 1149
+Arrest: 1111
+Xpert Handhaving: 1107
+Recht & Praktijk - Vastgoedrecht: 1042
+Onderneming en Recht: 1002
+Rapport: 979
+Fiscale Encyclopedie de Vakstudie: 966
+Fiscale Monografieën: 960
+Kort begrip van het intellectuele eigendomsrecht: 959
+Memo financiële planning: 953
+Monografieën Sociaal Recht: 949
+Handboeken staats- en bestuursrecht: 941
+Decision: 883
+Handboek Externe Verslaggeving: 868
+Xpert Omgevingszaken: 843
+Pensioengids: 826
+Recht & Praktijk - Contracten- en aansprakelijkheidsrecht: 794
+CB Serie: 770
+Communicated Case: 742
+Beschikking: 740
+Advocaten: 708
+Mededeling nieuwe zaak: 705
+Verordening: 684
+AMvB: 658
+Nieuwsbericht: 657
+Judgment (Merits and Just Satisfaction): 631
+Compendium Nederlands vermogensrecht: 624
+Monografieën BW: 539
+Sociaal Memo: 528
+Compendium Fiscaliteit en Vastgoed: 525
+Gezondheidszorg: 515
+Fiscaal Memo Wet- & Regelgeving: 499
+Pensioenmemo: 498
+Staat en Recht: 496
+Mededeling arrest: 472
+Belastinggids IB: 451
+Groene Serie: 420
+Handboeken Veiligheid: 417
+Pbo: 403
+BTW gids: 401
+Het hedendaagse personen- en familierecht: 384
+Niet-dossierstukken: 382
+Loonheffingengids: 377
+Serie Van der Heijden Instituut (Stibbe): 373
+De Curator en het Concern: 371
+NDSZ Commentaar: 369
+Jaarrekening MKB: 331
+Wessels Insolventierecht: 330
+Onderneming en Recht (Stibbe): 325
+Nieuws: 320
+Blad gemeenschappelijke regeling: 318
+Recht & Praktijk - Personen- en familierecht: 314
+Xpert Bestuursrecht: 313
+Grip op de AVG werkboek: 302
+Staatsblad: 290
+Commisie, overige akten van de: 281
+Circulaire: 278
+FiscaalPlus Praktisch: 276
+Regelgeving (geconsolideerd): 267
+In verbondenheid: 255
+Brief: 245
+Recht & Praktijk - Insolventierecht: 226
+Commisie, overig documenten van de: 220
+Formulier: 219
+Fiscaal Memo Arresten & Beleid: 218
+Publicatieblad EU C-reeks: 214
+Huurrechtmemo: 213
+SEC- en SWD-documenten: 204
+Fiscaal Memo: 201
+Mededeling beschikking: 198
+Zienswijze en consultatie: 192
+Compendium Burgerlijk procesrecht: 189
+Wob-verzoek: 182
+Zakboek wetteksten voor de Hulpofficier: 181
+Brochure: 175
+State Immunity in Dutch Civil Proceedings: 174
+Handboek Strafzaken: 172
+Arbeidsrechtelijke themata: 171
+Rapporten: 170
+Recht & Praktijk - Ondernemingsrecht: 168
+Publicatieblad EU L-reeks: 166
+Klantbelang, belangenconflict en zorgplicht: 159
+Procedurele waarborgen in materiële EVRM-rechten: 157
+Conclusie van de advocaat-generaal: 156
+IEL Intellectual Property: 152
+Akte van organen ingesteld bij internationale overeenkomst: 150
+Commisie, voorstel voor wetgeving van de: 146
+Fed Fiscale Brochures: 141
+Ministeriele-regeling-BES: 139
+Mastermonografieën staats- en bestuursrecht: 138
+Burgerlijk Proces & Praktijk: 134
+Vonnis: 131
+Fiscaal Actueel: 129
+Nationale implementatie maatregel: 127
+Kroniek van het strafrecht: 126
+VPB Gids: 123
+Verklaring van geen bezwaar: 122
+Economy: 116
+Uitgaven Instituut voor Ondernemingsrecht (Stibbe): 115
+Beleidsregel-BES: 113
+Tekst & Commentaar: 111
+Omgevingsweb Professional - Vergunningvrij bouwen: de laatste stand van zaken: 109
+Belastingwijzers: 109
+Omgevingsweb Professional - Jurisprudentie: 107
+Memo Belastingcontrole: 106
+Tractatenblad: 105
+Casuïstiek fiscale behandeling van de DGA: 104
+Boom Basics Huurrecht: 103
+Corporate Acquisitions and Mergers: 101
+Recht & Praktijk - Staats- en bestuursrecht: 101
+Grip op de AVG: 99
+Tax: 97
+Uitspraken Onderwijsgeschillen: 97
+Toespraak: 96
+Handboek Financiële Verhouding Overheden: 96
+Ars Notariatus: 95
+KB: 92
+Concentratiemelding: 91
+De systematiek van de vermogensdelicten: 89
+IEL Constitutional Law: 88
+Conclusie: 88
+Besluit: 86
+Nieuwsberichten: 86
+IEL Cyber Law: 86
+Notarissen: 83
+Flexibele Arbeidsrelaties: 82
+European Air Law: 82
+Correspondentie: 80
+Mensenrechten Oordelen: 80
+Memo echtscheiding en alimentatie: 78
+ESC, opinie n.a.v. consultatie: 77
+IEL Sports Law: 77
+Begroting: 76
+IEL Energy Law: 76
+Oordelen: 75
+IEL Labour Law: 74
+Thema's van omgevingsrecht: 74
+IEL Civil Procedure: 73
+Jaarverslag: 73
+Raad, overige akten van de: 72
+Boekhouden voor (fiscaal) juristen: 72
+IEL Contracts: 69
+Warendorf's Dutch Civil and Commercial Legislation: 65
+Doorhaling: 65
+Gerechtsdeurwaarders: 62
+verzoekschrift: 61
+Grondzaken: 59
+Fiscale behandeling van de DGA: 59
+Adviezen over de tussentijdse ontbinding van de Staten van Aruba, Curaçao en Sint Maarten: 58
+Vergaderstuk: 57
+Public governance: 57
+Boom Basics Goederenrecht: 56
+NDFR Fiscale Praktijkreeks: 55
+Handboek voor de fiscaal adviseur in de agrarische sector: 53
+IEL Media Law: 52
+Environment: 50
+IEL Competition Law: 50
+IBR Publicaties: 48
+Employment: 46
+NDFR Wegwijs Reeks: 46
+Investment: 45
+IEL Family and Succession Law: 45
+Richtlijn: 43
+IEL Property and Trust Law: 41
+IEL Religion: 41
+IEL Corporations and Partnerships: 41
+Health: 41
+Agenda's Eerste en Tweede Kamer: 39
+Mensenrechten Berichten: 38
+Mensenrechten Publicaties: 37
+Wet-BES: 37
+Reference: 36
+Ministeriele-regeling-archiefselectielijst: 35
+Finance: 34
+Overige akten: 34
+Handboek Personenschade: 33
+Wetten.nl: 33
+CR overige opinies: 32
+IEL Medical Law: 32
+Maatregel: 31
+Adviezen: 31
+Trade: 31
+Hof van Justitie van de EVA, beslissing, beschikking of consultatie van het: 31
+IEL Tort Law: 30
+Encyclopaedia of International Commercial Litigation: 28
+EP overige resoluties: 28
+EP wetgevingsresolutie: 28
+Diergeneeskundigen: 26
+Handboek Schaderegeling Motorrijtuigen: 26
+IEL Environmental Law: 26
+Education: 26
+RijksKB: 26
+Rijkswet: 25
+Industry and entrepreneurship: 25
+Fiscale Modellen: 25
+Verzoekschrift (PB): 25
+Bij nader inzien: 25
+Accountants: 25
+IEL Transport Law: 24
+Geschillenregeling: 24
+IBR Feestbundel: 24
+Onderzoek: 23
+Rechtspraak Wwz 2015-2016: 23
+Akten, overige: 22
+Zakendoen in Duitsland: 22
+Sociaal Zakboek: 22
+Akte van de Toezichthoudende Autoriteit van de EVA: 20
+Report: 20
+Chemical safety and biosafety: 19
+Publicaties Centrum voor Notarieel recht: 19
+IEL Commercial and Economic Law: 19
+Other Documents: 18
+Hof van Justitie van de EVA, zaak in behandeling bij het: 18
+IEL Social Security Law: 18
+WT: 18
+IBR Praktijkboeken: 17
+NDFR Andere wetenschappelijke uitgaven: 17
+Overeenkomst met niet-Lid-Staten of internationale organisaties: 17
+ESC overige opinies: 17
+Social and welfare issues: 17
+Aanbeveling: 17
+Press Release: 17
+CR, opinie n.a.v. consultatie: 17
+Handboek Accountancy: 16
+Estate Planning: 16
+Montreal Convention: 16
+Gerechtelijke uitspraak: 16
+Akkoord: 16
+Verhoorbijstand 2[punt]0: 16
+Europese Rekenkamer bijzonder rapport: 15
+Opinion: 15
+JOIN-documenten: 15
+IEL Insurance Law: 15
+Q&A: 15
+Arbitrage: 14
+Visie en opinie: 14
+Praktijkthema's Legal: 14
+Praktijkthema's Legal Free: 14
+Uitspraken GCBO: 14
+Mediatekst: 13
+NDFR Fiscale Geschriften: 13
+Regelgeving: 13
+Corporate governance: 13
+WVO Commentaar en Jurisprudentie: 12
+Fiscale actualiteiten voor de arbeidsrechtpraktijk 2017: 12
+Omgevingsvergunning in de praktijk: 12
+Praktijkcahiers Strafrecht: 12
+Bribery and corruption: 12
+IEL Intergovernmental Organizations: 11
+Regulatory reform: 11
+Judgment (Just Satisfaction): 11
+Enforcement of Foreign Judgements: 11
+Letter: 11
+IBR Bouwrecht monografieën: 11
+IEL Private International Law: 10
+Overige documenten: 10
+Regional, rural and urban development: 10
+Beleidsnota: 10
+Agriculture and fisheries: 10
+Statement: 10
+Video: 9
+Vacancy: 9
+Convenant: 9
+Kort geding: 9
+Gratis fiscale thema's: 9
+CR overige akten: 9
+Reports: 9
+Monografieën Privaatrecht: 9
+Judgment (Revision): 8
+Summary of conclusions: 8
+International Business Transactions: 8
+Raad, gemeenschappelijk standpunt van de: 8
+Modellen voor de Rechtspraktijk: 8
+Guidelines & Recommendations: 8
+Insurance and Pensions: 8
+Incidenteel vonnis: 7
+Zakboek strafvordering voor de Hulpofficier: 7
+Besluiten en resoluties Europees Parlement: 7
+Speech: 7
+Vacatures en carrièrenieuws: 7
+Advies: 6
+Judgment (Merits): 6
+Serie Bouw- en Aanbestedingsrecht: 6
+Fiscale thema's: 6
+Final report: 6
+SMSG Advice: 6
+Ambtsbericht: 6
+Compliance table: 5
+Internet: 5
+Tender: 5
+Brochure en uitgave: 5
+CVB Aanbeveling (gedeeltelijk) Bevestigd (=Aanbeveling (gedeeltelijk)): 5
+Pensioenwetgeving: 5
+Pensioencompendium 1: 5
+Consultation paper: 5
+CVB Aanbeveling Bevestigd (=Aanbeveling): 4
+Science and technology: 4
+School en Wet (PDF): 4
+Technical Standards: 4
+Sociaal Memo Actueel: 4
+Bodem (PDF): 4
+NDFR Modellen: 4
+Wetgeving toezicht financiële markten: 4
+Jaarplan: 4
+NDFR Fiscaal Dossier: 4
+Akte van het Permanent Comite van de EVA: 4
+Innovation: 4
+Afwijzing: 4
+Lezing: 4
+Maritime Law Handbook: 4
+Migration: 4
+Arbeidsovereenkomstenrecht: 3
+VAF (=voorzittersafwijzing): 3
+Akte van parlementaire organen ingesteld bij internationale overeenkomst: 3
+Akte (tot herstel): 3
+Resolutie: 3
+Wetteksten Financiële Dienstverlening: 3
+Tussenvonnis: 3
+ECB richtsnoer: 3
+Waarschuwing: 3
+Recht & Praktijk - Financieel recht: 3
+Green growth and sustainable development: 3
+Avis: 3
+CVB Aanbeveling Vernietigd (=Afwijzing): 3
+VT voor zover nodig: 3
+CVB Afwijzing Bevestigd (=Afwijzing): 3
+ECB aanbeveling: 3
+Commissie, voorstel voor wetgeving van de: 3
+Hoger beroep: 2
+IB Almanak: 2
+Letters: 2
+Handboek Jaarrekening (PDF): 2
+Brochures (Rijksoverheid): 2
+Subsidiememo: 2
+Kaart: 2
+Actualiteiten Sociaal Recht: 2
+Zakboek strafrecht voor de Hulpofficier: 2
+Jaarrekening MKB Checklist (PDF): 2
+International Labour and Employment Compliance Handbook: 2
+Materieel Strafrecht: 2
+AB Klassiek: 2
+DVAF Bevestigd: 2
+Verklaring: 2
+Memo financiële planning (PDF): 2
+VPB Almanak: 2
+Pensioenwetgeving (PDF): 2
+Res-54: 2
+Consultations: 2
+NDSZ: 2
+Documenten m.b.t. Europol: 2
+Europese Rekenkamer rapport: 2
+Parlementaire geschiedenis: 2
+Recht & Praktijk: 2
+Van het concern: 1
+Aanbeveling (gedeeltelijk): 1
+Annual Report: 1
+Archief Wetboek van Strafvordering, Melai, Groenhuijsen ea: 1
+Wetteksten Financiële Dienstverlening (PDF): 1
+Uitspraken Ondernemingskamer: 1
+VT (=voorzitterstoewijzing): 1
+Archief Wetboek van Strafvordering, IISS, Melai, Klip ea: 1
+Wetboek van Strafrecht: 1
+Wetgeving Europees arbeidsrecht: 1
+VAF vernietigd (=aanbeveling voor zover nodig): 1
+VT (zonder aanbeveling): 1
+Verenigd Koninkrijk: 1
+Het Nederlands strafprocesrecht: 1
+Beleggersmemo: 1
+EVA overige akten: 1
+NDFR Alert Reeks: 1
+Effectenkoerslijst (PDF): 1
+Encyclopedie Sociale Verzekering: 1
+Encyclopedie Sociale Voorzieningen: 1
+Militair Straf- en Tuchtrecht: 1
+Milieurecht Totaal: 1
+Encyclopedie Sociale Zekerheid: 1
+Mededeling: advies: 1
+Europese Rekenkamer opinie: 1
+Loon Almanak: 1
+Leidraad voor de AA beroep en praktijk: 1
+Leerstukken strafrecht: 1
+Fraude - Financieel recht – Ondernemingskamer: 1
+Gemeenschappelijk optreden: 1
+Kantonprocedure: 1
+Goede raad is duur!: 1
+Juridisch-Economisch Lexicon EN-DE: 1
+Juridisch-Economisch Lexicon DE-EN: 1
+Gratis overheid thema's: 1
+Jaarboek Externe Verslaggeving (PDF): 1
+Grootboek: 1
+Handboek Externe Verslaggeving Checklist (PDF): 1
+Huur en verhuur van woonruimte in 88 vragen en antwoorden: 1
+Hoofdstukken van bestuursrecht (Kluwer): 1
+EU-verdrag: 1
+BTW Almanak: 1
+Nederland: 1
+Drie rechters en één norm: 1
+Beschikking van de vertegenwoordigers van de regeringen van Lid-Staten: 1
+T&T Modernisering van de Successiewet: 1
+Stelplicht & Bewijslast (S&B): 1
+Bodemprocedure: 1
+Socialezekerheidswetgeving: 1
+Sociaal Memo Actueel (PDF): 1
+Schenken & Erven Almanak: 1
+SDU Overige literatuur: 1
+Ruimtelijk Bestuursrecht: 1
+Requests for advice: 1
+CVB Aanbeveling Bevestigd (met wijziging gronden) (= Aanbeveling): 1
+CVB Aanbeveling Vernietigd (gedeeltelijk) (= Aanbeveling (gedeeltelijk): 1
+CVB Afwijzing Vernietigd (=Aanbeveling): 1
+Checklist jaarrekening (PDF): 1
+RCC Aanbeveling (voor zover nodig): 1
+Compendium voor de Jaarrekening: 1
+Competition: 1
+Protocols: 1
+Consultatie: 1
+Pocket Belastingwetten (PDF): 1
+Het Technolease drama: 1
+Overheid thema's: 1
+Overeenkomst tussen Lid-Staten: 1
+De Wetgeving op het notarisambt: 1
+Decision (Partial): 1
+ECB opinie: 1
+Pensioen Almanak: 1
+
+Process finished with exit code 0
