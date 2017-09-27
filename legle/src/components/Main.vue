@@ -1,8 +1,8 @@
 <template>
   <div class="main-container">
     <div class="red-top-bar"></div>
-    <graph-view class="abs fs"></graph-view>
-    <widget></widget>
+    <graph-view class="abs fs" :showRedBackground="showRedBackground"></graph-view>
+    <widget :onQuery="onQuery"></widget>
     <span class="footer-text">Legle - <span style="opacity: 0.6">legal Google blendle</span> </span>
   </div>
 </template>
@@ -19,6 +19,13 @@ export default {
   name: 'main',
   data () {
     return {
+      showRedBackground: true,
+    }
+  },
+  methods: {
+    onQuery(query) {
+      this.showRedBackground = false;
+      //TODO(Joris): query server, doe er wat leuks mee
     }
   }
 }
