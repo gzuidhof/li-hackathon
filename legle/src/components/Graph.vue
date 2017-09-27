@@ -24,21 +24,6 @@
 </template>
 
 <script>
-import '../js/main.js'
-import '../js/api.js'
-import '../js/bindings.js'
-import '../js/commafield.js'
-import '../js/help.js'
-import '../js/helpers.js'
-import '../js/loadsaved.js'
-import '../js/main_functions.js'
-import '../js/modals.js'
-import '../js/network_serialize.js'
-import '../js/progress.js'
-
-function test(){
-  return 2;
-}
 
 export default {
   name: 'main',
