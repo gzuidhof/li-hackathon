@@ -1,16 +1,6 @@
 <template>
   <div class="graph-view">
     <div class="red-background fs abs" :class="showRedBackground ? '':'hide'"></div>
-      <div id="formbox" class="transparent-blur">
-        <button id="random" type=button title="Random article">
-          <i class="icon ion-shuffle"></i>
-        </button>
-        <button id="submit" type="button" title="Enter the name of a wikipedia page, then press 'Go'">
-          Go
-        </button>
-        <div id="input" class="commafield" data-placeholder="Wikipedia"> </div>
-      </div>
-
       <!-- Will hold the network -->
       <div id="container" class="fullscreen">
         <!-- Welcome message -->
@@ -24,10 +14,50 @@
 </template>
 
 <script>
+import 'vis';
 
 export default {
   name: 'main',
-  props: ['showRedBackground'],
+  props: ['showRedBackground', 'graph'],
+  watch: {
+    graph: function(g) {
+      console.log('changed')
+      
+      let {nodes, edges} = g;
+      let nodesDataSet = new vis.DataSet(nodes);
+      let edgesDataSet = new vis.DataSet(edges);
+      // create an array with nodes
+      // var nodes = new vis.DataSet([
+      //   {id: 1, label: 'Node 1'},
+      //   {id: 2, label: 'Node 2'},
+      //   {id: 3, label: 'Node 3'},
+      //   {id: 4, label: 'Node 4'},
+      //   {id: 5, label: 'Node 5'}
+      // ]);
+
+      // // create an array with edges
+      // var edges = new vis.DataSet([
+      //   {from: 1, to: 3},
+      //   {from: 1, to: 2},
+      //   {from: 2, to: 4},
+      //   {from: 2, to: 5},
+      //   {from: 3, to: 3}
+      // ]);
+
+      // create a network
+      var container = document.getElementById('container');
+      var data = {
+        nodes: nodesDataSet,
+        edges: edgesDataSet
+      };
+      var options = {};
+      var network = new vis.Network(container, data, options);
+    }
+  },
+
+  mounted: function () {
+  },
+
   data () {
     return {
     }

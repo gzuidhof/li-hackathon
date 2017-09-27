@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
     <div class="red-top-bar"></div>
-    <graph-view class="abs fs" :showRedBackground="showRedBackground"></graph-view>
+    <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph"></graph-view>
     <widget :onQuery="onQuery"></widget>
     <span class="footer-text">Legle - <span style="opacity: 0.6">legal Google blendle</span> </span>
   </div>
@@ -20,17 +20,28 @@ export default {
   data () {
     return {
       showRedBackground: true,
+      graph: {},
     }
   },
   methods: {
     onQuery(query) {
       this.showRedBackground = false;
-      //TODO(Joris): query server, doe er wat leuks mee
+      console.log(Widget.data());
+      fetch(`http://localhost:5000/document?ecli=${query}`)
+        .then((response) => response.json())
+        .then((data) => {
+          this.graph = {
+            nodes: [{id: data.id, label: shortenString(data.Title, 30)}],
+            edges: [],
+          }
+        });
     }
   }
 }
 
-function test(){return 2;}
+function shortenString(string, maxLength) {
+  return string.substring(0, maxLength) + '...'
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
