@@ -16,6 +16,14 @@ CREATE (:Document {
 });
 
 USING PERIODIC COMMIT 10000
+LOAD CSV WITH HEADERS FROM "file:///wetboekenteksten.csv" AS law
+CREATE (:Law {
+    Law: law.wet,
+    Link: law.link,
+    Text: law.text
+});
+
+USING PERIODIC COMMIT 10000
 LOAD CSV WITH HEADERS FROM "file:///references.csv" AS ref
 MATCH (doc1:Document {id: toInteger(ref.ID)})
 MATCH (doc2:Document {SearchNumber: ref.References})
@@ -24,5 +32,6 @@ CREATE (doc1)-[r:REFERENCE {Count: toInteger(ref.Counts)}]->(doc2)
 
 
 CREATE INDEX ON :Document(id);
+CREATE INDEX ON :Law(link);
 
 schema await
