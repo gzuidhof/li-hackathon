@@ -1,36 +1,39 @@
 <template>
-<form class="sidebar">
+<form class="sidebar" v-on:submit.prevent="onEnter">
     <div class="widget widget-search animated zoomInLeft">
-      <input class="search-input" placeholder="Enter an ECLI number.."></input>
-    </div>
-  <div class="widget widget-main">
-    <div class="widget-section">
-        <h3>Details</h3>
-    </div>
-    <div class="widget-content">
-    <table>
-        <tbody>
-            <tr v-for="(value, key) in fields">
-            <td class="action">
-                <a>✔</a>
-            </td>
-            <td class="key">{{key}}
-            </td>
-            <td class="content">{{value}}
-            </td>
-            </tr>
-        </tbody>
-    </table>
+      <input class="search-input" placeholder="Enter an ECLI number.." v-model="searchQuery"></input>
     </div>
 
-    <div class="widget-section">
-        <h3>Samenvatting</h3>
-    </div>
-    <div class="widget-content">
-    <p class="summary">{{summary}}</p>
-    </div>
+  <div v-if="widgetVisible">
+    <div class="widget widget-main">
+        <div class="widget-section">
+            <h3>Document</h3>
+        </div>
+        <div class="widget-content">
+        <table>
+            <tbody>
+                <tr v-for="(value, key) in fields">
+                <td class="action">
+                    <a>✔</a>
+                </td>
+                <td class="key">{{key}}
+                </td>
+                <td class="content">{{value}}
+                </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+
+        
+        <div class="widget-content">
+            <h4 style="margin-top: -12px; margin-bottom: 6px;">Samenvatting</h4>
+            <p class="summary">{{summary}}</p>
+        </div>
 
 
+
+    </div>
 
   </div>
   </form>
@@ -39,8 +42,15 @@
 <script>
 import Graph from './Graph.vue'
 export default {
+  methods: {
+      onEnter(asdf){
+          console.log("Please search nao :(", this.searchQuery);
+      }
+  },
   data () {
     return {
+        widgetVisible: false,
+        searchQuery: "",
         fields: {
             "ECLI": "ECLI:asdf234123asdff",
             "Datum": "20-07-2013",
@@ -109,7 +119,7 @@ export default {
     display: -webkit-box;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
-    color: #555;
+    color: #666;
 }
 
 td {
