@@ -1,6 +1,6 @@
 <template>
 <form class="sidebar" v-on:submit.prevent="onEnter">
-    <div class="widget widget-search animated zoomInLeft">
+    <div class="widget widget-search animated fadeInLeft">
       <input class="search-input" placeholder="Enter an ECLI number.." v-model="searchQuery"></input>
     </div>
 
@@ -42,9 +42,11 @@
 <script>
 import Graph from './Graph.vue'
 export default {
+  props: ['onQuery'],
   methods: {
       onEnter(asdf){
-          console.log("Please search nao :(", this.searchQuery);
+          console.log("Please search nao ", this.searchQuery);
+          this.onQuery(this.searchQuery);
       }
   },
   data () {
@@ -71,6 +73,7 @@ export default {
     margin: 28px;
     width: 360px;
     position: absolute;
+    z-index: 1;
 }
 
 .key {
@@ -94,6 +97,7 @@ export default {
 
 .widget-search {
     margin-bottom: 24px;
+    animation-duration: 1s;
 }
 
 .search-input {
