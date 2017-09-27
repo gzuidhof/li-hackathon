@@ -1,22 +1,12 @@
 <template>
   <div class="graph-view">
     <div class="red-background fs abs" :class="showRedBackground ? '':'hide'"></div>
-      <div id="formbox" class="transparent-blur">
-        <button id="random" type=button title="Random article">
-          <i class="icon ion-shuffle"></i>
-        </button>
-        <button id="submit" type="button" title="Enter the name of a wikipedia page, then press 'Go'">
-          Go
-        </button>
-        <div id="input" class="commafield" data-placeholder="Wikipedia"> </div>
-      </div>
-
       <!-- Will hold the network -->
       <div id="container" class="fullscreen">
         <!-- Welcome message -->
         <div id="info">
           <h1>Law Map</h1>
-          <p>A tool for visualizing the connections between Law pages by Legle</p>
+          <p>A tool for visualizing the connections between law documents by Legle</p>
         </div>
       </div>
     <div class="center-greeting animated fadeIn" :class="showRedBackground ? '':'hide'">legle</div>
@@ -24,10 +14,39 @@
 </template>
 
 <script>
+import 'vis';
 
 export default {
   name: 'main',
-  props: ['showRedBackground'],
+  props: ['showRedBackground', 'graph'],
+  watch: {
+    graph: function(g) {
+      let {nodes, edges} = g;
+
+      let nodesDataSet = new vis.DataSet(nodes);
+      let edgesDataSet = new vis.DataSet(edges);
+
+      // create a network
+      var container = document.getElementById('container');
+      var data = {
+        nodes: nodesDataSet,
+        edges: edgesDataSet
+      };
+      var options = {
+          nodes: {
+              color: '#e00',
+              font: {
+                  color: '#eee',
+              },
+              shape: 'ellipse',
+          }
+      };
+      var network = new vis.Network(container, data, options);
+    }
+  },
+
+  mounted: function () {},
+
   data () {
     return {
     }

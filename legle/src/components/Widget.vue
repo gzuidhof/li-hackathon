@@ -51,7 +51,7 @@ export default {
   },
   data () {
     return {
-        widgetVisible: false,
+        widgetVisible: true,
         searchQuery: "",
         fields: {
             "ECLI": "ECLI:asdf234123asdff",
