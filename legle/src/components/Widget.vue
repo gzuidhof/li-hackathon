@@ -5,8 +5,33 @@
     </div>
   <div class="widget widget-main">
     <div class="widget-section">
-        <h3>Document details</h3>
+        <h3>Details</h3>
     </div>
+    <div class="widget-content">
+    <table>
+        <tbody>
+            <tr v-for="(value, key) in fields">
+            <td class="action">
+                <a>✔</a>
+            </td>
+            <td class="key">{{key}}
+            </td>
+            <td class="content">{{value}}
+            </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+    <div class="widget-section">
+        <h3>Samenvatting</h3>
+    </div>
+    <div class="widget-content">
+    <p class="summary">{{summary}}</p>
+    </div>
+
+
+
   </div>
   </form>
 </template>
@@ -16,6 +41,12 @@ import Graph from './Graph.vue'
 export default {
   data () {
     return {
+        fields: {
+            "ECLI": "ECLI:asdf234123asdff",
+            "Datum": "20-07-2013",
+            "Bron": "www.rechtspraak.nl",
+        },
+        summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris maximus purus id lacus elementum placerat. Ut id efficitur urna. Nunc sed porta leo, vitae imperdiet metus. Sed commodo ipsum arcu, non dignissim lectus blandit et. Vestibulum at ex leo. Sed imperdiet urna ut justo semper tempor. Fusce ultrices convallis dignissim. Cras accumsan viverra est quis rutrum. Suspendisse potenti. Ut sodales eu justo eget malesuada. Integer tincidunt felis quis ex scelerisque varius.",
     }
   }
 }
@@ -30,6 +61,10 @@ export default {
     margin: 28px;
     width: 360px;
     position: absolute;
+}
+
+.key {
+    font-weight: bold;
 }
 
 .widget {
@@ -63,6 +98,22 @@ export default {
 
 .widget-section h3 {
     font-weight: normal;
+}
+
+.widget-content {
+    padding: 12px 4px;
+}
+
+.summary {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    color: #555;
+}
+
+td {
+    padding: 0px 2px;
 }
 
 </style>
