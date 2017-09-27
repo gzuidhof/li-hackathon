@@ -21,8 +21,6 @@ export default {
   props: ['showRedBackground', 'graph'],
   watch: {
     graph: function(g) {
-      console.log('changed')
-      
       let {nodes, edges} = g;
       let nodesDataSet = new vis.DataSet(nodes);
       let edgesDataSet = new vis.DataSet(edges);

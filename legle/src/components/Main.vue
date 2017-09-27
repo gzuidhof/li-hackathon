@@ -30,10 +30,28 @@ export default {
       fetch(`http://localhost:5000/document?ecli=${query}`)
         .then((response) => response.json())
         .then((data) => {
-          this.graph = {
-            nodes: [{id: data.id, label: shortenString(data.Title, 30)}],
-            edges: [],
+          let nodes = [];
+          let edges = [];
+          let alreadyAdded = [];
+          for (let doc of data) {
+            let id = doc.document.id;
+            if (alreadyAdded.indexOf(id) === -1) {
+              nodes.push({...doc.document, label: shortenString(doc.document.Title, 30)});
+              alreadyAdded.push(id);
+            }
+            for (let link of doc.links) {
+              let id = link.id;
+              if (alreadyAdded.indexOf(id) === -1) {
+                nodes.push({...link, label: shortenString(link.Title, 30)});
+                alreadyAdded.push(id);
+              }
+              edges.push({from: doc.document.id, to: link.id});
+            }
           }
+          this.graph = {
+            nodes,
+            edges
+          };
         });
     }
   }
