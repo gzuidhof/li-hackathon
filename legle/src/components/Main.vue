@@ -1,5 +1,6 @@
 <template>
   <div class="main-container">
+    <div class="red-top-bar"></div>
     <graph-view class="abs fs"></graph-view>
     <widget></widget>
     <span class="footer-text">Legle - <span style="opacity: 0.6">legal Google blendle</span> </span>
@@ -25,6 +26,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
+
+.red-top-bar {
+  position: absolute;
+  height: 4px;
+  background-color: #e61515;
+  width: 100%;
+}
 
 .main-container {
   width: 100%;

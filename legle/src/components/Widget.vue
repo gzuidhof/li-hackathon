@@ -1,12 +1,11 @@
 <template>
 <form class="sidebar">
-    <div class="widget widget-search">
+    <div class="widget widget-search animated zoomInLeft">
       <input class="search-input" placeholder="Enter an ECLI number.."></input>
     </div>
   <div class="widget widget-main">
     <div class="widget-section">
         <h3>Document details</h3>
-        
     </div>
   </div>
   </form>
