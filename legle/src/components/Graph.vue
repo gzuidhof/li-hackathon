@@ -1,11 +1,30 @@
 <template>
   <div class="graph-view">
-      <div class="red-background fs abs" :class="showRedBackground ? '':'hide'"></div>
-      <div class="center-greeting animated fadeIn" :class="showRedBackground ? '':'hide'">legle</div>
+    <div class="red-background fs abs" :class="showRedBackground ? '':'hide'"></div>
+      <div id="formbox" class="transparent-blur">
+        <button id="random" type=button title="Random article">
+          <i class="icon ion-shuffle"></i>
+        </button>
+        <button id="submit" type="button" title="Enter the name of a wikipedia page, then press 'Go'">
+          Go
+        </button>
+        <div id="input" class="commafield" data-placeholder="Wikipedia"> </div>
+      </div>
+
+      <!-- Will hold the network -->
+      <div id="container" class="fullscreen">
+        <!-- Welcome message -->
+        <div id="info">
+          <h1>Law Map</h1>
+          <p>A tool for visualizing the connections between Law pages by Legle</p>
+        </div>
+      </div>
+    <div class="center-greeting animated fadeIn" :class="showRedBackground ? '':'hide'">legle</div>
   </div>
 </template>
 
 <script>
+
 export default {
   name: 'main',
   props: ['showRedBackground'],

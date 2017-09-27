@@ -1,5 +1,13 @@
 import 'animate.css/animate.min.css'
 import 'font-awesome/css/font-awesome.min.css'
+import './assets/bar.css'
+import './assets/buttongroup.css'
+import './assets/commafield.css'
+import './assets/modals.css'
+import './assets/progress.css'
+import './assets/shepherd-custom.css'
+import './assets/style.css'
+import './assets/welcome.css'
 
 
 // The Vue build version to load with the `import` command
