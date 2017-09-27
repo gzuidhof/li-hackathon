@@ -1,6 +1,5 @@
 <template>
   <div class="graph-view">
-    
   </div>
 </template>
 

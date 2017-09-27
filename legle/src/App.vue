@@ -16,6 +16,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 #app {
@@ -50,5 +51,10 @@ html, body, h1, h2, h3, h4 {
 
 * {
   background-color: transparent;
+}
+
+p {
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 </style>
