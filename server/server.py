@@ -10,13 +10,25 @@ CORS(app)
 def document():
     ecli = request.args.get('ecli')
     result = session.run('''
-        MATCH (d:Document) WHERE d.SearchNumber = {ecli}
-        RETURN d
+        MATCH (d:Document)-[r:REFERENCE]-(o:Document) WHERE d.SearchNumber={ecli}
+        RETURN d, o
         ''',
         {'ecli': ecli}
     )
+    links = {}
+    docs = []
     for record in result:
-        return jsonify(dict(record['d']))
+        doc_id = record['d']['id']
+        if doc_id in links:
+            links[doc_id].append(dict(record['o']))
+        else:
+            docs.append(dict(record['d']))
+            links[doc_id] = [dict(record['o'])]
+
+    return jsonify([{
+            'document': d,
+            'links': [l for l in links[d['id']]]
+    } for d in docs])
 
 if __name__ == '__main__':
     driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "joris"))
