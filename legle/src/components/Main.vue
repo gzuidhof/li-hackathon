@@ -1,8 +1,8 @@
 <template>
   <div class="main-container">
     <div class="red-top-bar"></div>
-    <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph"></graph-view>
-    <widget :onQuery="onQuery"></widget>
+    <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo"></graph-view>
+    <widget :onQuery="onQuery" :widgetVisible="widgetVisible" :widgetInfo="widgetInfo"></widget>
     <span class="footer-text">Legle - <span style="opacity: 0.6">legal Google blendle</span> </span>
   </div>
 </template>
@@ -21,9 +21,25 @@ export default {
     return {
       showRedBackground: false,
       graph: {},
+      widgetInfo: {
+        fields: [],
+        summary: "",
+        id: "",
+      },
+      widgetVisible: false
     }
   },
   methods: {
+    setWidgetInfo(info) {
+      if(info) {
+        this.widgetInfo = info;
+        this.widgetVisible = true;
+      }
+      else {
+        this.widgetInfo = {fields:[], summary: "", id: ""}
+        this.widgetVisible = false;
+      }
+    },
     onQuery(query) {
       this.showRedBackground = false;
 
@@ -33,7 +49,7 @@ export default {
       }
       console.log(Widget.data());
 
-      fetch(`http://localhost:5000/document?ecli=${query}`)
+      fetch(`http://153e09d4.ngrok.io/document?ecli=${query}`)
         .then((response) => response.json())
         .then((data) => {
           let nodes = [];
