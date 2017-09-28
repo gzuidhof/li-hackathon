@@ -23,6 +23,8 @@ export default {
     graph: function(g) {
       let {nodes, edges} = g;
 
+      //nodes[0]['color'] = '#00F';
+
       let nodesDataSet = new vis.DataSet(nodes);
       let edgesDataSet = new vis.DataSet(edges);
 
@@ -42,6 +44,7 @@ export default {
           }
       };
       var network = new vis.Network(container, data, options);
+      network.on('select', (a)=>{console.log("SELECT", this.graph.nodes)});
     }
   },
 
@@ -64,7 +67,7 @@ export default {
 }
 
 .red-background {
-    background: linear-gradient(270deg, #c60808, #f75959);
+    background: linear-gradient(290deg, #1c08c6, #59d3f7);
     transition: all ease-in-out 500ms;
     position: absolute;
     z-index: 1;
