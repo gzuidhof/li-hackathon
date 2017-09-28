@@ -1,0 +1,13 @@
+{
+    "name": "legalintelligence extension",
+    "version": "1.0",
+    "manifest_version": 2,
+    "description": "Search selected text on legal intelligence",
+    "permissions": [
+      "contextMenus"
+     ],
+    "background": {
+      "scripts": ["browse.js"]
+    },
+    "icons": { "16": "l.png"}
+}
