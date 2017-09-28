@@ -55,8 +55,14 @@ export default {
           let nodes = [];
           let edges = [];
           for (let doc of data.docs) {
-            console.log(doc);
-            nodes.push({...doc, label: doc.SearchNumber});
+            let label = '';
+            if (!doc.SearchNumber) {
+              doc.SearchNumber = doc.Title;
+              label = chunkSubstr(shortenString(doc.SearchNumber, 50), 14).join('\n');
+            } else {
+              label = doc.SearchNumber;
+            }
+            nodes.push({...doc, label})
           }
           for (let edge of data.references) {
             edges.push({...edge});
