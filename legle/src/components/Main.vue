@@ -1,9 +1,9 @@
 <template>
   <div class="main-container">
     <div class="red-top-bar"></div>
-    <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo"></graph-view>
+    <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo" :isTitle="isTitle"></graph-view>
     <widget :onQuery="onQuery" :widgetVisible="widgetVisible" :widgetInfo="widgetInfo"></widget>
-    <span class="footer-text">Legle - <span style="opacity: 0.6">legal Google blendle</span> </span>
+    <span class="footer-text" :style="{color: showRedBackground ? '#f3f3f3' : '#343434'}">Legle ✦ <span style="opacity: 0.8; font-style: italic">niet zoeken maar ontdekken</span> </span>
   </div>
 </template>
 
@@ -26,7 +26,8 @@ export default {
         summary: "",
         id: "",
       },
-      widgetVisible: false
+      widgetVisible: false,
+      isTitle: true,
     }
   },
   methods: {
@@ -41,11 +42,11 @@ export default {
       }
     },
     onQuery(query) {
-      this.showRedBackground = false;
 
       if (query === '') {
         this.showRedBackground = true;
         this.widgetVisible = false;
+        this.isTitle = true;
         return;
       }
       console.log(Widget.data(), query);
@@ -71,7 +72,12 @@ export default {
           this.graph = {
             nodes,
             edges
-            };
+          };
+          this.showRedBackground = false;
+          if (nodes.length == 0) {
+            this.showRedBackground = true;
+            this.isTitle=false;
+          }
         });
     }
   }

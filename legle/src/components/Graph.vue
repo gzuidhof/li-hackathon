@@ -9,7 +9,8 @@
           <p>A tool for visualizing the connections between law documents by Legle</p>
         </div>
       </div>
-    <div class="center-greeting animated fadeIn" :class="showRedBackground ? '':'hide'">legle</div>
+    <div class="center-greeting animated fadeIn"
+    :class="(showRedBackground ? '':'hide ') + (isTitle ? '':'no-title')">{{isTitle? 'legle':'geen resultaten'}}</div>
   </div>
 </template>
 
@@ -17,13 +18,22 @@
 import 'vis';
 
 const COLORS = [
-    '#EEE', //light
-    '#68ADFF', //light
-    '#2D547E',
-    '#7295A6',
-    '#3F60D3',
-    '#A06EC9',
-    '#813BCE'
+    '#107FC9', //light
+    '#0E4EAD',
+    '#0B108C',
+    '#0C0F66',
+    '#07093D',
+    '#598de0',
+    '#3a6cbc',
+    '#1e4584',
+    '#0d5fe2',
+    '#11284c',
+    '#6b8ec4',
+    '#4a6287',
+    '#21385b',
+    '#7caaef',
+    '#4b8ced',
+    '#2c5ba3',
 ]
 
 const SOURCES = ['Rechtspraak.nl', 'Ove', 'Xpe', 'wet', 'Ken', 'Lok', 'Pra', 'Mem', 'FD', 'Eur',
@@ -37,7 +47,8 @@ export default {
   props: [
       'showRedBackground',
       'graph',
-      'setWidgetInfo' //Node info that is currently shown in the widget to the left
+      'setWidgetInfo', //Node info that is currently shown in the widget to the left,
+      'isTitle',
     ],
   watch: {
     graph: function(g) {
@@ -68,7 +79,7 @@ export default {
       console.log("Graph changed, n nodes", nodes.length, 'n edjes', edges.length);
 
       for(var i = 0; i < nodes.length; i++) {
-          
+
           var src = nodes[i].Sources[0];
           var color = '#813BCE';
           var fontColor = '#EEE';
@@ -102,7 +113,7 @@ export default {
       };
 
       this.network.setData(data);
-      
+
       this.network.on('selectNode', (selection) => {
           var id = selection.nodes[0];
           let position = this.network.getPositions(id);
@@ -159,7 +170,7 @@ export default {
 }
 
 .red-background {
-    background: linear-gradient(290deg, #1c08c6, #59d3f7);
+    background: linear-gradient(290deg, #1e0fa9, #59d3f7);
     transition: all ease-in-out 500ms;
     position: absolute;
     z-index: 1;
@@ -179,8 +190,12 @@ export default {
     font-size: 12.5em;
     z-index: 2;
     text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
-    transition: all ease-in-out 200ms;
+    transition: opacity ease-in-out 200ms;
     opacity: 1;
+}
+
+.no-title {
+    font-size: 3em;
 }
 
 .center-greeting.hide{
