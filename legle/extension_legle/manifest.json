@@ -1,0 +1,13 @@
+{
+    "name": "Legle app extension",
+    "version": "1.0",
+    "manifest_version": 2,
+    "description": "Your description",
+    "permissions": [
+      "contextMenus"
+     ],
+    "background": {
+      "scripts": ["browse.js"]
+    },
+    "icons": { "16": "l.png"}
+}
