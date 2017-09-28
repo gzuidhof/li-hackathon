@@ -23,6 +23,17 @@ const COLORS = [
     '#0B108C',
     '#0C0F66',
     '#07093D',
+    '#598de0',
+    '#3a6cbc',
+    '#1e4584',
+    '#0d5fe2',
+    '#11284c',
+    '#6b8ec4',
+    '#4a6287',
+    '#21385b',
+    '#7caaef',
+    '#4b8ced',
+    '#2c5ba3',
 ]
 
 const SOURCES = ['Rechtspraak.nl', 'Ove', 'Xpe', 'wet', 'Ken', 'Lok', 'Pra', 'Mem', 'FD', 'Eur',
