@@ -81,7 +81,7 @@ export default {
       for(var i = 0; i < nodes.length; i++) {
 
           var src = nodes[i].Sources[0];
-          var color = '#813BCE';
+          var color = '#d6e6ff';
           var fontColor = '#EEE';
 
           for(var j = 0; j < SOURCES.length; j++) {
@@ -92,7 +92,7 @@ export default {
               }
           }
 
-          if (color == '#EEE' || color == '#68ADFF') {
+          if (color == '#EEE' || color == '#68ADFF' || color == '#d6e6ff') {
               fontColor = '#555';
           }
 
