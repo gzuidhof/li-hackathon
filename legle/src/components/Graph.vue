@@ -74,6 +74,39 @@ export default {
         const edgesDataSet = new vis.DataSet();
         const container = document.getElementById('container');
         this.network = new vis.Network(container, {nodes: nodesDataSet, edges: edgesDataSet}, options);
+
+        this.network.on('selectNode', (selection) => {
+        var id = selection.nodes[0];
+        let position = this.network.getPositions(id);
+        position = position[Object.keys(position)[0]];
+        this.network.moveTo({
+            position,
+            animation: {
+                duration: 500,
+                easingFunction: "easeOutQuad"
+            }
+        });
+        for (var n of this.graph.nodes) {
+            if (n.id == id) {
+                console.log("SELECTED", n);
+                this.setWidgetInfo({
+                    summary: n.Summary,
+                    fields: {
+                        "ID": n.SearchNumber,
+                        "Bron": n.Sources[0],
+                        "Datum": n.Timestamp,
+                        "Categorie": n.LawArea[0],
+                    },
+                    id: n.id,
+                });
+                break;
+            }
+        }
+        });
+        this.network.on('deselectNode', () => {
+            console.log("DESELECT");
+            this.setWidgetInfo(null);
+        });
       }
 
       console.log("Graph changed, n nodes", nodes.length, 'n edjes', edges.length);
@@ -118,39 +151,6 @@ export default {
       };
 
       this.network.setData(data);
-
-      this.network.on('selectNode', (selection) => {
-          var id = selection.nodes[0];
-          let position = this.network.getPositions(id);
-          position = position[Object.keys(position)[0]];
-          this.network.moveTo({
-              position,
-              animation: {
-                  duration: 500,
-                  easingFunction: "easeOutQuad"
-              }
-          });
-          for (var n of this.graph.nodes) {
-              if (n.id == id) {
-                  console.log("SELECTED", n);
-                  this.setWidgetInfo({
-                      summary: n.Summary,
-                      fields: {
-                          "ID": n.SearchNumber,
-                          "Bron": n.Sources[0],
-                          "Datum": n.Timestamp,
-                          "Categorie": n.LawArea[0],
-                      },
-                      id: n.id,
-                  });
-                  break;
-              }
-          }
-        });
-        this.network.on('deselectNode', () => {
-            console.log("DESELECT");
-            this.setWidgetInfo(null);
-        });
     }
   },
 
