@@ -103,6 +103,7 @@ export default {
                         "Nummer": pubNumber,
                     },
                     id: n.id,
+                    liSearchQuery: n.liSearchQuery,
                 });
                 break;
             }

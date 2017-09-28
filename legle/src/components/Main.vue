@@ -25,6 +25,7 @@ export default {
         fields: [],
         summary: "",
         id: "",
+        liSearchQuery: "",
       },
       widgetVisible: false,
       isTitle: true,
@@ -60,8 +61,11 @@ export default {
             let label = '';
             if (!doc.SearchNumber) {
               doc.SearchNumber = doc.Title;
+              doc.SearchNumber = doc.Sources[0];
+              doc.liSearchQuery = doc.Summary.substr(0, 120);
               label = chunkSubstr(shortenString(doc.SearchNumber, 57), 20).join('\n');
             } else {
+              doc.liSearchQuery = doc.PublicationNumber;
               label = '\n' + doc.SearchNumber + '\n';
             }
             nodes.push({...doc, label})

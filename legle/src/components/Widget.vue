@@ -37,9 +37,9 @@
             Openen
             </div>
             </a>
-            <a :href="'https://www.legalintelligence.com/SearchResults?q='+ widgetInfo.fields.ID">
+            <a :href="'https://www.legalintelligence.com/SearchResults?q='+ widgetInfo.liSearchQuery">
             <div class="li-button">
-            Openen in Legal Intelligence
+            Zoeken in Legal Intelligence
             </div>
             </a>
         </div>
@@ -160,7 +160,7 @@ td {
     font-size: 1.05em;
     text-align: center;
     color: #828080;
-    padding: 2px 8px;
+    padding: 2px 10px;
     border-radius: 4px;
     border: 1px solid #ccc;
 }
@@ -171,7 +171,7 @@ td {
 }
 
 .mr {
-    margin-right: 8px;
+    margin-right: 12px;
     background-color: #3f60da;
     color: #eee;
     border: 1px solid #eee;
