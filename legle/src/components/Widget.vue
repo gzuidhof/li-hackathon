@@ -31,7 +31,18 @@
             <p class="summary">{{widgetInfo.summary}}</p>
         </div>
 
-
+        <div class="li-button-wrapper" :href="widgetInfo.id">
+            <a :href="'http://www.legalintelligence.com/documents/' + widgetInfo.id">
+            <div class="li-button mr">
+            Openen
+            </div>
+            </a>
+            <a :href="'https://www.legalintelligence.com/SearchResults?q='+ widgetInfo.fields.ID">
+            <div class="li-button">
+            Openen in Legal Intelligence
+            </div>
+            </a>
+        </div>
 
     </div>
 
@@ -128,6 +139,47 @@ export default {
 
 td {
     padding: 0px 2px;
+}
+
+.li-button-wrapper{
+    /*margin: 0 auto;*/
+    position: absolute;
+    bottom: 18px;
+    right: 18px;
+    text-decoration: none !important;
+    display: flex;
+}
+
+.li-button-wrapper a {
+    text-decoration: none !important;
+}
+
+.li-button {
+    cursor: pointer;
+    background-color: #f7f7f7;
+    font-size: 1.05em;
+    text-align: center;
+    color: #828080;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.li-button:hover {
+    text-decoration: none;
+    background-color: #eee;
+}
+
+.mr {
+    margin-right: 8px;
+    background-color: #b659dc;
+    color: #eee;
+    border: 1px solid #eee;
+}
+
+.mr:hover {
+    background-color: #ab43d6;
+
 }
 
 </style>
