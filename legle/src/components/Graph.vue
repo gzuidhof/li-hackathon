@@ -16,14 +16,58 @@
 <script>
 import 'vis';
 
+const COLORS = [
+    '#EEE', //light
+    '#68ADFF', //light
+    '#2D547E',
+    '#7295A6',
+    '#3F60D3',
+    '#A06EC9',
+    '#813BCE'
+]
+
+const SOURCES = ['Rechtspraak.nl', 'Ove', 'Xpe', 'wet', 'Ken', 'Lok', 'Pra', 'Mem', 'FD', 'Eur',
+'Rij', 'Pen', 'Soc', 'Bel', 'Ten', 'ACM', 'VN', 'Mod', 'Ond', 'Arb', 'NTF', 'Kor', 'De ', 'Lex',
+'Tax', 'RVD', 'Int', 'Mon', 'Tuc', 'Han', 'IEL', 'KiF', 'Dir', 'Fis', 'Zor', 'NJB', 'Cen', 'BRA',
+'NJF', 'Raa', 'Com', 'BNB', 'IE-', 'Prg', 'Ope', 'Mil', 'Blo', 'NJ', 'NDF', 'Zak', 'EPO', 'NZa',
+'SC', 'Reg', 'FED', 'RFR', 'JAR', 'WFR', 'EHR']
+
 export default {
   name: 'main',
-  props: ['showRedBackground', 'graph'],
+  props: [
+      'showRedBackground',
+      'graph',
+      'infoNode' //Node info that is currently shown in the widget to the left
+    ],
   watch: {
     graph: function(g) {
       let {nodes, edges} = g;
 
-      //nodes[0]['color'] = '#00F';
+      console.log("Graph changed", nodes[0]);
+
+      for(var i = 0; i < nodes.length; i++) {
+          
+          var src = nodes[i].Sources[0];
+          var color = '#813BCE';
+          var fontColor = '#EEE';
+
+          for(var j = 0; j < SOURCES.length; j++) {
+              var colorIndex = j % COLORS.length;
+              if (src.startsWith(SOURCES[j])) {
+                  color = COLORS[colorIndex];
+              }
+          }
+
+          if (color == '#EEE' || color == '#68ADFF') {
+              fontColor = '#555';
+          }
+
+          nodes[i]['color'] = color;
+          nodes[i]['font'] = {
+              color: fontColor,
+          }
+
+      }
 
       let nodesDataSet = new vis.DataSet(nodes);
       let edgesDataSet = new vis.DataSet(edges);

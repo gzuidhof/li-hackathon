@@ -33,15 +33,14 @@ export default {
       }
       console.log(Widget.data());
 
-      fetch(`http://1366ee3f.ngrok.io/document?ecli=${query}`)
+      fetch(`http://e65fd1d9.ngrok.io/document?ecli=${query}`)
         .then((response) => response.json())
         .then((data) => {
           let nodes = [];
           let edges = [];
           for (let doc of data.docs) {
-            const titleChunks = chunkSubstr(shortenString(doc.Title, 50), 14);
-            const title = titleChunks.join("\n");
-            nodes.push({...doc, label: title});
+            console.log(doc);
+            nodes.push({...doc, label: doc.SearchNumber});
           }
           for (let edge of data.references) {
             edges.push({...edge});
