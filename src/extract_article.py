@@ -80,7 +80,7 @@ def get_article(input_sentence, wetboek):
         info['lid'] = lid
         info['bwnummer'] = None
     else:
-        pattern = '(artikel ?(([1-9]{{0,3}})(.([1-9]{{1,3}}([a-z])?))))?(, )?(.{{0,10}}lid)?((, )(aanhef en )?onder ([a-z])?)?(,? van de ({}))'.format(wetboek)
+        pattern = '(artikel ?(([1-9]{{0,3}}[a-z]?)(\.?([1-9]{{1,3}}([a-z])?))))?(, )?(.{{0,10}}lid)?((, )(aanhef en )?onder ([a-z])?)?(,? van de ({}))'.format(wetboek)
         match = re.search(pattern, input_sentence)
         if match is None:
             return None

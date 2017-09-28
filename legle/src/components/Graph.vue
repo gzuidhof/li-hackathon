@@ -37,13 +37,13 @@ export default {
   props: [
       'showRedBackground',
       'graph',
-      'infoNode' //Node info that is currently shown in the widget to the left
+      'setWidgetInfo' //Node info that is currently shown in the widget to the left
     ],
   watch: {
     graph: function(g) {
       let {nodes, edges} = g;
 
-      console.log("Graph changed", nodes[0]);
+      console.log("Graph changed, n nodes", nodes.length);
 
       for(var i = 0; i < nodes.length; i++) {
           
@@ -55,6 +55,7 @@ export default {
               var colorIndex = j % COLORS.length;
               if (src.startsWith(SOURCES[j])) {
                   color = COLORS[colorIndex];
+                  break;
               }
           }
 
@@ -88,7 +89,29 @@ export default {
           }
       };
       var network = new vis.Network(container, data, options);
-      network.on('select', (a)=>{console.log("SELECT", this.graph.nodes)});
+      network.on('selectNode', (selection) => {
+          var id = selection.nodes[0];
+          for (var n of this.graph.nodes) {
+              if (n.id == id) {
+                  console.log("SELECTED", n);
+                  this.setWidgetInfo({
+                      summary: n.Summary,
+                      fields: {
+                          "ID": n.SearchNumber,
+                          "Bron": n.Sources[0],
+                          "Datum": n.Timestamp,
+                          "Categorie": n.LawArea[0],
+                      },
+                      id: n.id,
+                  });
+                  break;
+              }
+          }
+        });
+     network.on('deselectNode', () => {
+         console.log("DESELECT");
+         this.setWidgetInfo(null);
+     })
     }
   },
 
