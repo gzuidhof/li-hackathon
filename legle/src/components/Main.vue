@@ -1,8 +1,8 @@
 <template>
   <div class="main-container">
     <div class="red-top-bar"></div>
-    <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph"></graph-view>
-    <widget :onQuery="onQuery"></widget>
+    <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo"></graph-view>
+    <widget :onQuery="onQuery" :widgetVisible="widgetVisible" :widgetInfo="widgetInfo"></widget>
     <span class="footer-text">Legle - <span style="opacity: 0.6">legal Google blendle</span> </span>
   </div>
 </template>
@@ -21,9 +21,25 @@ export default {
     return {
       showRedBackground: false,
       graph: {},
+      widgetInfo: {
+        fields: [],
+        summary: "",
+        id: "",
+      },
+      widgetVisible: false
     }
   },
   methods: {
+    setWidgetInfo(info) {
+      if(info) {
+        this.widgetInfo = info;
+        this.widgetVisible = true;
+      }
+      else {
+        this.widgetInfo = {fields:[], summary: "", id: ""}
+        this.widgetVisible = false;
+      }
+    },
     onQuery(query) {
       this.showRedBackground = false;
 
@@ -39,8 +55,14 @@ export default {
           let nodes = [];
           let edges = [];
           for (let doc of data.docs) {
-            console.log(doc);
-            nodes.push({...doc, label: doc.SearchNumber});
+            let label = '';
+            if (!doc.SearchNumber) {
+              doc.SearchNumber = doc.Title;
+              label = chunkSubstr(shortenString(doc.SearchNumber, 50), 14).join('\n');
+            } else {
+              label = doc.SearchNumber;
+            }
+            nodes.push({...doc, label})
           }
           for (let edge of data.references) {
             edges.push({...edge});

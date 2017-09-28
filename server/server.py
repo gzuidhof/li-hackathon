@@ -9,26 +9,37 @@ CORS(app)
 @app.route('/document')
 def document():
     ecli = request.args.get('ecli')
-    result = session.run('''
-        MATCH (d:Document)-[r:REFERENCE]-(o:Document) WHERE d.SearchNumber={ecli}
-        RETURN d, o, r
-        ''',
-        {'ecli': ecli}
+    depth = request.args.get('depth', 2)
+    query = (
+        f'MATCH p=(d:Document)-[*..{depth}]-(o:Document)'
+        f'WHERE d.SearchNumber="{ecli}"'
+        'RETURN DISTINCT([d] + o) as nodes, relationships(p) as r'
+    )
+    print(query)
+    result = session.run(query
     )
     docs = []
     references = []
-    found_ids = set()
+    neo4j_id_to_doc_id = {}
+    refs = []
     for record in result:
-        for doc in (record['d'], record['o']):
-            doc_id = doc['id']
-            if doc_id not in found_ids:
-                found_ids.add(doc_id)
+        for doc in record['nodes']:
+            doc_id = doc.id
+            if doc_id not in neo4j_id_to_doc_id:
+                neo4j_id_to_doc_id[doc.id] = doc['id']
                 docs.append(dict(doc))
-        references.append({
-            'from': record['d']['id'],
-            'to': record['o']['id'],
-            'count': record['r']['Count'],
-        })
+        for ref in record['r']:
+            refs.append(ref)
+    
+    found_refs = set()
+    for ref in refs:
+        if ref.id not in found_refs:
+            found_refs.add(ref.id)
+            references.append({
+                'from': neo4j_id_to_doc_id[ref.start],
+                'to': neo4j_id_to_doc_id[ref.end],
+                'count': ref['Count'],
+            })
 
     return jsonify({
         'docs': docs,
@@ -39,4 +50,4 @@ if __name__ == '__main__':
     driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "joris"))
     session = driver.session()
 
-    app.run(debug=True, use_reloader=True)
+    app.run(host='0.0.0.0', debug=True, use_reloader=True)
