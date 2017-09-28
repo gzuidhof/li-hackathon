@@ -3,6 +3,7 @@
     <div class="red-top-bar" :style="{opacity: showRedBackground ? '0': '1.0'}"></div>
     <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo" :isTitle="isTitle" :query="query"></graph-view>
     <widget :onQuery="onQuery" :widgetVisible="widgetVisible" :widgetInfo="widgetInfo"></widget>
+    <options :isOnBackground="showRedBackground"></options>
     <span class="footer-text" :style="{color: showRedBackground ? '#f3f3f3' : '#343434'}">Legle ✦ <span style="opacity: 0.8; font-style: italic">niet zoeken maar ontdekken</span> </span>
   </div>
 </template>
@@ -10,11 +11,13 @@
 <script>
 import Graph from './Graph.vue'
 import Widget from './Widget.vue'
+import Options from './Options.vue'
 
 export default {
   components: {
     'graph-view': Graph,
     'widget': Widget,
+    'options': Options,
   },
   name: 'main',
   data () {

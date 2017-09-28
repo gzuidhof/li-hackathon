@@ -114,19 +114,28 @@ export default {
 
                             var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
 
-
-                            this.setWidgetInfo({
-                                summary: n.Summary,
-                                fields: {
-                                    "ID": n.SearchNumber,
-                                    "Bron": n.Sources[0],
-                                    "Datum": n.Timestamp,
-                                    "Categorie": n.LawArea[0],
-                                    "Nummer": pubNumber,
-                                },
-                                id: n.id,
-                                liSearchQuery: n.liSearchQuery,
-                            });
+                            if(n.Sources){
+                              this.setWidgetInfo({
+                                  summary: n.Summary,
+                                  fields: {
+                                      "ID": n.SearchNumber,
+                                      "Bron": n.Sources[0],
+                                      "Datum": n.Timestamp,
+                                      "Categorie": n.LawArea[0],
+                                      "Nummer": pubNumber,
+                                  },
+                                  id: n.id,
+                                  liSearchQuery: n.liSearchQuery,
+                              });
+                            }
+                            else{
+                              this.setWidgetInfo({
+                                  summary: n.Text,
+                                  fields: {
+                                      "Wet": n.SearchNumber
+                                  }
+                              });
+                            }
                             break;
                         }
                     }
@@ -197,17 +206,20 @@ export default {
                 var color = '#d6e6ff';
                 var fontColor = '#EEE';
 
-                for (var j = 0; j < SOURCES.length; j++) {
-                    var colorIndex = j % COLORS.length;
+                if(nodes[i].Sources) {
+                  var src = nodes[i].Sources[0];
+                  for (var j = 0; j < SOURCES.length; j++) {
+                      var colorIndex = j % COLORS.length;
 
-                    if (src.startsWith('Rechtspraak.nl')) {
-                        color = '#EEE';
-                        fontColor = '#555';
-                    }
-                    else if (src.startsWith(SOURCES[j])) {
-                        color = COLORS[colorIndex];
-                        break;
-                    }
+                      if (src.startsWith('Rechtspraak.nl')) {
+                          color = '#EEE';
+                          fontColor = '#555';
+                      }
+                      else if (src.startsWith(SOURCES[j])) {
+                          color = COLORS[colorIndex];
+                          break;
+                      }
+                  }
                 }
 
                 if (color == '#EEE' || color == '#68ADFF' || color == '#d6e6ff') {
@@ -221,14 +233,27 @@ export default {
 
                 let label = '';
                 if (!nodes[i].SearchNumber) {
-                    nodes[i].SearchNumber = nodes[i].Sources[0];
-                    nodes[i].liSearchQuery = nodes[i].Summary.substr(0, 120);
+                    if(nodes[i].Sources){
+                        nodes[i].SearchNumber = nodes[i].Sources[0];
+                    }
+                    else {
+                      nodes[i].SearchNumber = nodes[i].Law;
+                    }
+                    if(nodes[i].Summary){
+                        nodes[i].liSearchQuery = nodes[i].Summary.substr(0, 120);
+                    }
+                    else {
+                      nodes[i].liSearchQuery = 'law2';
+                    }
                     label = chunkSubstr(shortenString(nodes[i].SearchNumber, 57), 20).join('\n');
                 } else {
                     nodes[i].liSearchQuery = nodes[i].PublicationNumber;
                     label = '\n' + nodes[i].SearchNumber + '\n';
                 }
                 nodes[i]['label'] = label;
+                if(nodes[i].Law){
+                  nodes[i]['shape'] = 'box';
+                }
                 console.log(nodes[i])
                 console.log(label);
             }
