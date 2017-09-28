@@ -1,5 +1,5 @@
 <template>
-    <div class="options-container abs fs animated fadeIn">
+    <div class="options-container abs animated fadeIn">
         <div class="options-button" :class="isOnBackground?'':'non-background-text'">
             <span class="fa fa-bars"></span>
         </div>
@@ -15,6 +15,10 @@ export default {
 </script>
 
 <style>
+.options-container {
+    position: relative;
+}
+
 .options-button {
     position: absolute;
     transition: all cubic-bezier(0.215, 0.610, 0.355, 1) 200ms;
@@ -25,6 +29,8 @@ export default {
     opacity: 0.5;
     cursor: pointer;
     padding: 0px 2px;
+    z-index: 5;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.24);
 }
 
 .options-button:hover {
@@ -33,7 +39,12 @@ export default {
 }
 
 .non-background-text {
-    color: #236fb1;
+    color: #fff;
     opacity: 1;
+}
+
+.non-background-text:hover {
+    opacity: 1;
+    color: #fafafa;
 }
 </style>
