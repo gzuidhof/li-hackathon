@@ -18,13 +18,11 @@
 import 'vis';
 
 const COLORS = [
-    '#EEE', //light
-    '#68ADFF', //light
-    '#2D547E',
-    '#7295A6',
-    '#3F60D3',
-    '#A06EC9',
-    '#813BCE'
+    '#107FC9', //light
+    '#0E4EAD',
+    '#0B108C',
+    '#0C0F66',
+    '#07093D',
 ]
 
 const SOURCES = ['Rechtspraak.nl', 'Ove', 'Xpe', 'wet', 'Ken', 'Lok', 'Pra', 'Mem', 'FD', 'Eur',
@@ -70,7 +68,7 @@ export default {
       console.log("Graph changed, n nodes", nodes.length, 'n edjes', edges.length);
 
       for(var i = 0; i < nodes.length; i++) {
-          
+
           var src = nodes[i].Sources[0];
           var color = '#813BCE';
           var fontColor = '#EEE';
@@ -104,7 +102,7 @@ export default {
       };
 
       this.network.setData(data);
-      
+
       this.network.on('selectNode', (selection) => {
           var id = selection.nodes[0];
           let position = this.network.getPositions(id);
