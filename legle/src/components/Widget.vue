@@ -32,12 +32,12 @@
         </div>
 
         <div class="li-button-wrapper" :href="widgetInfo.id">
-            <a :href="'http://www.legalintelligence.com/documents/' + widgetInfo.id">
+            <a target='_blank' :href="'http://www.legalintelligence.com/documents/' + widgetInfo.id">
             <div class="li-button mr">
             Openen
             </div>
             </a>
-            <a :href="'https://www.legalintelligence.com/SearchResults?q='+ widgetInfo.liSearchQuery">
+            <a target='_blank' :href="'https://www.legalintelligence.com/SearchResults?q='+ widgetInfo.liSearchQuery">
             <div class="li-button">
             Zoeken in Legal Intelligence
             </div>
@@ -68,7 +68,10 @@ export default {
   },
   created() {
     if (this.$route.query.q) {
-      this.searchQuery = this.$route.query.q;
+      this.searchQuery = this.$route.query.q.trim();
+      if (this.searchQuery.endsWith('.') || this.searchQuery.endsWith(',')) {
+          this.searchQuery = this.searchQuery.substring(0, this.searchQuery.length - 1).trim();
+      }
       this.onEnter();
     }
   },

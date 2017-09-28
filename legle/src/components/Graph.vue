@@ -180,7 +180,7 @@ export default {
 .graph-view {
     width: 100%;
     height: 100%;
-    background-color: #f2f2f2;
+    background-color: #eff1f5;
     position: absolute;
     z-index: 0;
 }
