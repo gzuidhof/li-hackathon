@@ -47,7 +47,7 @@ export default {
         this.showRedBackground = true;
         return;
       }
-      console.log(Widget.data());
+      console.log(Widget.data(), query);
 
       fetch(`http://153e09d4.ngrok.io/document?ecli=${query}`)
         .then((response) => response.json())
