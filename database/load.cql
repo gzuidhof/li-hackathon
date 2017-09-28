@@ -12,8 +12,12 @@ CREATE (:Document {
     Summary: doc.Summary_Text,
     Title: doc.Title_Text,
     Timestamp: toInteger(doc.timestamp),
-    SearchNumber: doc.SearchNumber
+    SearchNumber: doc.SearchNumber,
+    PublicationNumber: doc.PublicationNumber
 });
+RETURN "Documents created";
+
+CREATE INDEX ON :Document(id);
 
 USING PERIODIC COMMIT 10000
 LOAD CSV WITH HEADERS FROM "file:///wetboekenteksten.csv" AS law
@@ -22,23 +26,24 @@ CREATE (:Law {
     Link: law.link,
     Text: law.text
 });
+RETURN "Laws created";
 
 USING PERIODIC COMMIT 10000
 LOAD CSV WITH HEADERS FROM "file:///references.csv" AS ref
 MATCH (doc1:Document {id: toInteger(ref.ID)})
 MATCH (doc2:Document {SearchNumber: ref.References})
-CREATE (doc1)-[r:REFERENCE {Count: toInteger(ref.Counts)}]->(doc2)
-;
+CREATE (doc1)-[r:REFERENCE {Count: toInteger(ref.Counts)}]->(doc2);
+RETURN "References created";
 
 USING PERIODIC COMMIT 10000
 LOAD CSV WITH HEADERS FROM "file:///clicks.csv" AS click
 MATCH (doc1:Document {id: toInteger(click.ID)})
 MATCH (doc2:Document {id: toInteger(click.OtherID)})
 CREATE (doc1)-[c1:ALSO_VIEWED {Count: toInteger(click.Count)}]->(doc2)
-CREATE (doc1)<-[c2:ALSO_VIEWED {Count: toInteger(click.Count)}]-(doc2)
-;
+CREATE (doc1)<-[c2:ALSO_VIEWED {Count: toInteger(click.Count)}]-(doc2);
+RETURN "Clicks created";
 
-CREATE INDEX ON :Document(id);
+CREATE INDEX ON :Document(SearchNumber);
 CREATE INDEX ON :Law(link);
 
 schema await
