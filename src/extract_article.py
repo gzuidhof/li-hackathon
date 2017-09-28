@@ -1,6 +1,11 @@
 import re
 
 lid_conversion = {
+    'lid een' : 1,
+    'lid twee' : 2,
+    'lid drie' : 3,
+    'lid vier' : 4,
+    'lid vijf' : 5,
     'eerste lid' : 1,
     'tweede lid' : 2,
     'derde lid' : 3,
