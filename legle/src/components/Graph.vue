@@ -43,6 +43,28 @@ export default {
     graph: function(g) {
       let {nodes, edges} = g;
 
+        if (!this.network) {
+            const options = {
+            nodes: {
+                color: '#e00',
+                font: {
+                    color: '#eee',
+                },
+                shape: 'ellipse',
+            }
+        };
+
+        if(nodes.length > 200) {
+            options['layout'] = {
+                improvedLayout: false
+            };
+        };
+        const nodesDataSet = new vis.DataSet();
+        const edgesDataSet = new vis.DataSet();
+        const container = document.getElementById('container');
+        this.network = new vis.Network(container, {nodes: nodesDataSet, edges: edgesDataSet}, options);
+      }
+
       console.log("Graph changed, n nodes", nodes.length, 'n edjes', edges.length);
 
       for(var i = 0; i < nodes.length; i++) {
@@ -117,25 +139,7 @@ export default {
   },
 
   mounted: function () {
-      const options = {
-          nodes: {
-              color: '#e00',
-              font: {
-                  color: '#eee',
-              },
-              shape: 'ellipse',
-          }
-      };
 
-      if(nodes.length > 200) {
-          options['layout'] = {
-              improvedLayout: false
-          };
-      };
-      const nodes = new vis.DataSet();
-      const edges = new vis.DataSet();
-      const container = document.getElementById('container');
-      this.network = new vis.Network(container, {nodes, edges}, options);
   },
 
   data () {
