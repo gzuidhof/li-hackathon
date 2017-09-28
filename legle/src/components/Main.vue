@@ -43,7 +43,7 @@ export default {
       }
     },
     query(id) {
-      return fetch(`http://bf64f785.ngrok.io/document?id=${id}`)
+      return fetch(`http://4dbd57ae.ngrok.io/document?id=${id}`)
         .then((response) => response.json());
     },
     onQuery(query) {
@@ -56,7 +56,7 @@ export default {
       }
       console.log(Widget.data(), query);
 
-      fetch(`http://bf64f785.ngrok.io/document?ecli=${query}`)
+      fetch(`http://4dbd57ae.ngrok.io/document?ecli=${query}`)
         .then((response) => response.json())
         .then((data) => {
           this.graph = {
