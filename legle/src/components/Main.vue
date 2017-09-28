@@ -108,9 +108,10 @@ function shortenString(string, maxLength) {
 
 .red-top-bar {
   position: absolute;
-  height: 4px;
-  background-color: #e61515;
+  height: 2px;
+  background-color: #236fb1;
   width: 100%;
+  z-index: 5;
 }
 
 .main-container {
