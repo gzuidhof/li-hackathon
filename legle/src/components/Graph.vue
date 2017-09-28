@@ -62,7 +62,12 @@ export default {
                     color: '#eee',
                 },
                 shape: 'ellipse',
+                mass : 3
+            },
+            edges: {
+              length : 400
             }
+
         };
 
         if(nodes.length > 200) {
