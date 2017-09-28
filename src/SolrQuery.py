@@ -18,6 +18,7 @@ NUM_RVDR = 90000   # How many docs from RvdR ?
 ROWS_PER_QUERY = 1000
 
 selected_keys = ['ID', 'PublicationNumber', 'ProcedureType', 'TopLevelNavigation', 'Authors', 'Classifications', 'LawArea', 'Sources', 'Topic', 'Summary_Text', 'Title_Text', 'timestamp', 'SearchNumber']
+verdict_keys = ['InstanceType','Verdict','Verdict_Text']
 law_keys = ['wetboek','bwnummer','artikel','lid']
 
 wetboek_conversion = {}
@@ -42,6 +43,15 @@ print(wetboek_conversion)
 
 ljn_re = "(LJN)[ :]*([A-Z]{2}) *([0-9]{4})"
 ecli_re = "ECLI:[A-Z]*:[A-Z]*:[0-9]*:[0-9]+"
+
+Onbekend = 0
+Gerechtshof = 1
+HogeRaad = 2
+
+# Use case insensitive
+hoge_raad_re = "(beslissing|conclusie).*(verwerp|verniet|bekrach).*(.)"
+gerechtshof_re = "(beslissing|conclusie).*(verwerp|verniet|bekrach).*(.)"
+other_verdict_re = "( beslissing:? )(?!.*beslissing:? de.*)(de.*)"
 
 def extract_references(doc, ecli):
     # Search for ECLI numbers
@@ -70,6 +80,9 @@ def extract_fields(result):
             value = int((time - datetime.datetime(1970, 1, 1)).total_seconds())
 
         values.append(value)
+
+    instance_type, verdict, verdict_text = get_verdict(result)
+    values.extend([instance_type, verdict, verdict_text])
     return values
 
 
@@ -140,21 +153,70 @@ def results_to_csvs(results, collection=True, ECLI=True, law_references=True):
         #lr_pd.to_csv("law_references.csv", index=None)
 
     if collection:
-        documents_pd = pd.DataFrame(data=documents_db, columns=selected_keys)
+        doc_columns = selected_keys.extend(verdict_keys)
+        documents_pd = pd.DataFrame(data=documents_db, columns=doc_columns)
 
     return references_pd, lr_pd, documents_pd
+
+def get_verdict(r):
+    if "IssuingInstitution" in r:
+        if "hoge raad" in r['IssuingInstitution'].lower():
+            text = r['Text_Text_1']
+            match = re.search(hoge_raad_re, text, re.IGNORECASE)
+            if match is not None:
+                groups = match.groups()
+                verdict = groups[1]
+                if verdict.lower() == 'verniet':
+                    # De hoge raad heeft het vonnis van de rechtbank vernietigt
+                    return HogeRaad, True, None
+                elif verdict.lower() in ['verwerp','bekrach']:
+                    return HogeRaad, False, None
+                else:
+                    return HogeRaad, None, None
+            else:
+                return HogeRaad, None, None
+        elif "gerechtshof" in r['IssuingInstitution'].lower():
+            text = r['Text_Text_1']
+            match = re.search(gerechtshof_re, text, re.IGNORECASE)
+            if match is not None:
+                groups = match.groups()
+                verdict = groups[1]
+                if verdict.lower() == 'verniet':
+                    # Het gerechtshof heeft het vonnis van de rechtbank vernietigt
+                    return Gerechtshof, True, None
+                elif verdict.lower() in ['verwerp','bekrach']:
+                    # Het gerechtshof heeft het hoger beroep verworpen (maw. het vonnis bekrachtigd)
+                    return Gerechtshof, False, None
+                else:
+                    return Gerechtshof, None, None
+            else:
+                return Gerechtshof, None, None
+        else:
+            text = r['Text_Text_1']
+            match = re.search(other_verdict_re, text, re.IGNORECASE)
+            if match is not None:
+                groups = match.groups()
+                verdict = groups[1]
+                return Onbekend, None, verdict
+    return Onbekend, None, None
 
 def main():
     solr_ld = pysolr.Solr('http://localhost:8983/solr/Legal_Data')
     solr_rvdr =  pysolr.Solr('http://localhost:8983/solr/RvdR_Data')
+    """results = solr_rvdr.search("LawArea:\"Burgerlijk recht\"", rows=100)
+    for r in results:
+        print(r['ID'], get_verdict(r))
+
+
     return
     references_pd = pd.DataFrame(columns=['ID','SearchNumber','References','Counts'])
     references_pd.to_csv('references.csv',index=False)
 
     lr_pd = pd.DataFrame(columns=['ID','wetboek','bwnummer','artikel','lid'])
-    lr_pd.to_csv('law_references.csv', index=False)
+    lr_pd.to_csv('law_references.csv', index=False)"""
 
-    documents_pd = pd.DataFrame(columns=selected_keys)
+    doc_columns = selected_keys.extend(verdict_keys)
+    documents_pd = pd.DataFrame(columns=doc_columns)
     documents_pd.to_csv('documents.csv', index=False)
 
     with open('documents.csv', 'a', encoding='UTF-8') as docs, open('law_references.csv', 'a', encoding='UTF-8') as law_refs, open('references.csv', 'a', encoding='UTF-8') as refs:
@@ -162,15 +224,15 @@ def main():
         for i in tqdm.tqdm(range(int(NUM_LD / ROWS_PER_QUERY))):
             results = solr_ld.search("LawArea:\"Burgerlijk recht\" AND NOT Source:Rechtspraak.nl", start=i * ROWS_PER_QUERY, rows=ROWS_PER_QUERY)
             references_pd, lr_pd, documents_pd = results_to_csvs(results)
-            references_pd.to_csv(refs, index=False, header=False)
-            lr_pd.to_csv(law_refs, index=False, header=False)
+            #references_pd.to_csv(refs, index=False, header=False)
+            #lr_pd.to_csv(law_refs, index=False, header=False)
             documents_pd.to_csv(docs, index=False, header=False)
         print("Querying RvdR_Data\n")
         for i in tqdm.tqdm(range(int(NUM_RVDR / ROWS_PER_QUERY))):
             results = solr_rvdr.search("LawArea:\"Burgerlijk recht\"", start=i * ROWS_PER_QUERY, rows=ROWS_PER_QUERY)
             references_pd, lr_pd, documents_pd = results_to_csvs(results)
-            references_pd.to_csv(refs, index=False, header=False)
-            lr_pd.to_csv(law_refs, index=False, header=False)
+            #references_pd.to_csv(refs, index=False, header=False)
+            #lr_pd.to_csv(law_refs, index=False, header=False)
             documents_pd.to_csv(docs, index=False, header=False)
     #results = solr.search("*:*", rows=50000)
     #results_to_csvs(results,collection=False,ECLI=False)
