@@ -43,7 +43,7 @@ export default {
     graph: function(g) {
       let {nodes, edges} = g;
 
-      console.log("Graph changed, n nodes", nodes.length);
+      console.log("Graph changed, n nodes", nodes.length, 'n edjes', edges.length);
 
       for(var i = 0; i < nodes.length; i++) {
           
@@ -125,6 +125,12 @@ export default {
               },
               shape: 'ellipse',
           }
+      };
+
+      if(nodes.length > 200) {
+          options['layout'] = {
+              improvedLayout: false
+          };
       };
       const nodes = new vis.DataSet();
       const edges = new vis.DataSet();

@@ -29,6 +29,17 @@ lid_conversion = {
     'lid drie' : 3,
     'lid vier' : 4,
     'lid vijf' : 5,
+    'lid 1' : 1,
+    'lid 2' : 2,
+    'lid 3' : 3,
+    'lid 4' : 4,
+    'lid 5' : 5,
+    'lid 6' : 6,
+    'lid 7' : 7,
+    'lid 8' : 8,
+    'lid 9' : 9,
+    'lid 10' : 10,
+    'lid 11' : 11,
     'eerste lid' : 1,
     'tweede lid' : 2,
     'derde lid' : 3,
@@ -66,6 +77,8 @@ def get_article(input_sentence, wetboek):
             return None
         info['bwnummer'] = bwnummer
         info['artikel'] = artikel
+        if lid is not None:
+            lid = re.sub("jo.*", "", lid)
         info['lid'] = lid
     elif wetboek.lower() == 'awb' or wetboek.lower() == 'algemene wet bestuursrecht':
         pattern = 'artikel ?([0-9]{1,3}:[0-9]{1,3})(, )?(.{1,15}lid)?(.{1,20})?(Awb|Algemene wet bestuursrecht)'
@@ -77,10 +90,12 @@ def get_article(input_sentence, wetboek):
             return None
         info['wetboek'] = wb
         info['artikel'] = artikel
+        if lid is not None:
+            lid = re.sub("jo.*", "", lid)
         info['lid'] = lid
         info['bwnummer'] = None
     else:
-        pattern = '(artikel ?(([1-9]{{0,3}}[a-z]?)(\.?([1-9]{{1,3}}([a-z])?))))?(, )?(.{{0,10}}lid)?((, )(aanhef en )?onder ([a-z])?)?(,? van de ({}))'.format(wetboek)
+        pattern = '(artikel ?(([1-9]{{0,3}}[a-z]?)(\.?([0-9]{{1,3}}([a-z])?))))?(, )?(.{{0,10}}lid)?((, )(aanhef en )?onder ([a-z])?)?(,? van de ({}))'.format(wetboek)
         match = re.search(pattern, input_sentence)
         if match is None:
             return None
@@ -89,7 +104,10 @@ def get_article(input_sentence, wetboek):
             return None
         info['wetboek'] = wetboek
         info['artikel'] = groups[1]
-        info['lid'] = groups[7]
+        lid = groups[7]
+        if lid is not None:
+            lid = re.sub("jo.*","",lid)
+        info['lid'] = lid
         info['bwnummber'] = None
 
     if info['lid'] in lid_conversion:

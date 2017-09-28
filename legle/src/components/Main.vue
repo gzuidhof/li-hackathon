@@ -19,7 +19,7 @@ export default {
   name: 'main',
   data () {
     return {
-      showRedBackground: false,
+      showRedBackground: true,
       graph: {},
       widgetInfo: {
         fields: [],
@@ -45,11 +45,12 @@ export default {
 
       if (query === '') {
         this.showRedBackground = true;
+        this.widgetVisible = false;
         return;
       }
-      console.log(Widget.data());
+      console.log(Widget.data(), query);
 
-      fetch(`http://153e09d4.ngrok.io/document?ecli=${query}`)
+      fetch(`http://0c50a667.ngrok.io/document?ecli=${query}`)
         .then((response) => response.json())
         .then((data) => {
           let nodes = [];
@@ -58,9 +59,9 @@ export default {
             let label = '';
             if (!doc.SearchNumber) {
               doc.SearchNumber = doc.Title;
-              label = chunkSubstr(shortenString(doc.SearchNumber, 50), 14).join('\n');
+              label = chunkSubstr(shortenString(doc.SearchNumber, 57), 20).join('\n');
             } else {
-              label = doc.SearchNumber;
+              label = '\n' + doc.SearchNumber + '\n';
             }
             nodes.push({...doc, label})
           }
