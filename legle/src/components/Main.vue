@@ -39,6 +39,7 @@ export default {
           let nodes = [];
           let edges = [];
           for (let doc of data.docs) {
+            console.log(doc);
             nodes.push({...doc, label: doc.SearchNumber});
           }
           for (let edge of data.references) {

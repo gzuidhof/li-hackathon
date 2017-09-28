@@ -58,7 +58,7 @@ export default {
               }
           }
 
-          if (color == '#EEE') {
+          if (color == '#EEE' || color == '#68ADFF') {
               fontColor = '#555';
           }
 
@@ -68,8 +68,6 @@ export default {
           }
 
       }
-
-      //nodes[0]['color'] = '#00F';
 
       let nodesDataSet = new vis.DataSet(nodes);
       let edgesDataSet = new vis.DataSet(edges);
