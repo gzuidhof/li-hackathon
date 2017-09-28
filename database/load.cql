@@ -35,6 +35,14 @@ MATCH (doc2:Document {SearchNumber: ref.References})
 CREATE (doc1)-[r:REFERENCE {Count: toInteger(ref.Counts)}]->(doc2);
 RETURN "References created";
 
+
+USING PERIODIC COMMIT 10000
+LOAD CSV WITH HEADERS FROM "file:///law_references_sample.csv" as ref
+MATCH (doc:Document {id: toInteger(ref.ID)})
+MATCH (law:Law {Link: ref.wetboeklink})
+CREATE (doc)-[r:LAW_REFERENCE]->(law);
+RETURN "Law references created";
+
 USING PERIODIC COMMIT 10000
 LOAD CSV WITH HEADERS FROM "file:///clicks.csv" AS click
 MATCH (doc1:Document {id: toInteger(click.ID)})

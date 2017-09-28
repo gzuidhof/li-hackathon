@@ -5,7 +5,7 @@ wetboek_conversion = {
     'arbowet': 'Arbeidsomstandighedenwet',
     'bopz': 'Bijzonder Opnemingen Psychiatrische Ziekenhuis',
     'bw': 'Burgerlijk Wetboek',
-    'ww': 'Werkeloosheidswet',
+    'ww': 'Werkloosheidswet',
     'wabo': 'Wet algemene bepalingen omgevingsrecht',
     'waz': 'Wet ambulancezorg',
     'ib 2001': 'Wet inkomstenbelasting 2001',
@@ -113,6 +113,4 @@ def get_article(input_sentence, wetboek):
     if info['lid'] in lid_conversion:
         info['lid'] = lid_conversion[info['lid']]
 
-    if info['wetboek'].lower() in wetboek_conversion:
-        info['wetboek'] = wetboek_conversion[info['wetboek'].lower()]
     return info
