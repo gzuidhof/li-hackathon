@@ -147,7 +147,8 @@ li {
   margin: 0 10px;
 }
 
-a {
-  color: #e03232;
+a, a:hover {
+  color: #404cff;
+  text-decoration: none;
 }
 </style>

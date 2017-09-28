@@ -89,6 +89,10 @@ export default {
         for (var n of this.graph.nodes) {
             if (n.id == id) {
                 console.log("SELECTED", n);
+
+                var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
+                
+
                 this.setWidgetInfo({
                     summary: n.Summary,
                     fields: {
@@ -96,6 +100,7 @@ export default {
                         "Bron": n.Sources[0],
                         "Datum": n.Timestamp,
                         "Categorie": n.LawArea[0],
+                        "Nummer": pubNumber,
                     },
                     id: n.id,
                 });
