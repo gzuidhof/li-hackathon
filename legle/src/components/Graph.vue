@@ -65,7 +65,12 @@ export default {
                         mass : 3
                     },
                     edges: {
-                        length : 250
+                        length : 250,
+                        arrows: {
+                          to:     {enabled: true, scaleFactor:1, type:'arrow'},
+                          middle: {enabled: false, scaleFactor:1, type:'arrow'},
+                          from:   {enabled: false, scaleFactor:1, type:'arrow'}
+                        },
                     },
                     layout: {
                         randomSeed : 420
