@@ -11,27 +11,32 @@ def document():
     ecli = request.args.get('ecli')
     result = session.run('''
         MATCH (d:Document)-[r:REFERENCE]-(o:Document) WHERE d.SearchNumber={ecli}
-        RETURN d, o
+        RETURN d, o, r
         ''',
         {'ecli': ecli}
     )
-    links = {}
     docs = []
+    references = []
+    found_ids = set()
     for record in result:
-        doc_id = record['d']['id']
-        if doc_id in links:
-            links[doc_id].append(dict(record['o']))
-        else:
-            docs.append(dict(record['d']))
-            links[doc_id] = [dict(record['o'])]
+        for doc in (record['d'], record['o']):
+            doc_id = doc['id']
+            if doc_id not in found_ids:
+                found_ids.add(doc_id)
+                docs.append(dict(doc))
+        references.append({
+            'from': record['d']['id'],
+            'to': record['o']['id'],
+            'count': record['r']['Count'],
+        })
 
-    return jsonify([{
-            'document': d,
-            'links': [l for l in links[d['id']]]
-    } for d in docs])
+    return jsonify({
+        'docs': docs,
+        'references': references,
+    })
 
 if __name__ == '__main__':
     driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "joris"))
     session = driver.session()
 
-    app.run(host='0.0.0.0', debug=True, use_reloader=True)
+    app.run(debug=True, use_reloader=True)

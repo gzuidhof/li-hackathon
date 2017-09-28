@@ -32,21 +32,11 @@ export default {
         .then((data) => {
           let nodes = [];
           let edges = [];
-          let alreadyAdded = [];
-          for (let doc of data) {
-            let id = doc.document.id;
-            if (alreadyAdded.indexOf(id) === -1) {
-              nodes.push({...doc.document, label: shortenString(doc.document.Title, 30)});
-              alreadyAdded.push(id);
-            }
-            for (let link of doc.links) {
-              let id = link.id;
-              if (alreadyAdded.indexOf(id) === -1) {
-                nodes.push({...link, label: shortenString(link.Title, 30)});
-                alreadyAdded.push(id);
-              }
-              edges.push({from: doc.document.id, to: link.id});
-            }
+          for (let doc of data.docs) {
+            nodes.push({...doc, label: shortenString(doc.Title, 30)});
+          }
+          for (let edge of data.references) {
+            edges.push({...edge});
           }
           this.graph = {
             nodes,
