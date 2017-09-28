@@ -65,7 +65,7 @@ export default {
                 mass : 3
             },
             edges: {
-              length : 400
+              length : 250
             }
 
         };
@@ -150,6 +150,11 @@ export default {
               color: fontColor,
           };
 
+      }
+      for(var i = 0; i < edges.length; i++){
+          let count = edges[i].count;
+          console.log(edges[i]);
+          edges[i]['value'] = count*10;
       }
 
       let nodesDataSet = new vis.DataSet(nodes);
