@@ -37,7 +37,7 @@ RETURN "References created";
 
 
 USING PERIODIC COMMIT 10000
-LOAD CSV WITH HEADERS FROM "file:///law_references_sample.csv" as ref
+LOAD CSV WITH HEADERS FROM "file:///law_references.csv" as ref
 MATCH (doc:Document {id: toInteger(ref.ID)})
 MATCH (law:Law {Link: ref.wetboeklink})
 CREATE (doc)-[r:LAW_REFERENCE]->(law);
