@@ -3,7 +3,7 @@
     <div class="red-top-bar"></div>
     <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo" :isTitle="isTitle"></graph-view>
     <widget :onQuery="onQuery" :widgetVisible="widgetVisible" :widgetInfo="widgetInfo"></widget>
-    <span class="footer-text">Legle - <span style="opacity: 0.6">legal Google blendle</span> </span>
+    <span class="footer-text" :style="{color: showRedBackground ? '#f3f3f3' : '#343434'}">Legle ✦ <span style="opacity: 0.8; font-style: italic">niet zoeken maar ontdekken</span> </span>
   </div>
 </template>
 

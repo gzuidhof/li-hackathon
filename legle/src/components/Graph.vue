@@ -161,7 +161,7 @@ export default {
 }
 
 .red-background {
-    background: linear-gradient(290deg, #1c08c6, #59d3f7);
+    background: linear-gradient(290deg, #1e0fa9, #59d3f7);
     transition: all ease-in-out 500ms;
     position: absolute;
     z-index: 1;
