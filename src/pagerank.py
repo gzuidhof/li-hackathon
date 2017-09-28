@@ -4,9 +4,7 @@ from tqdm import tqdm
 
 def create_graph():
     documents = pd.read_csv('~/neo4j-community-3.2.5/import/documents.csv', usecols=['ID', 'PublicationNumber', 'SearchNumber'])
-    # laws = pd.read_csv('~/neo4j-community-3.2.5/import/wetboekenteksten.csv', usecols=['link'])
     references = pd.read_csv('~/neo4j-community-3.2.5/import/references.csv', usecols=['ID', 'References'])
-    # law_references = pd.read_csv('~/neo4j-community-3.2.5/import/law_references.csv', usecols=['ID', 'wetboeklink'])
     sn_to_id = {sn: id for id, _, sn in documents.itertuples(index=False)}
     graph = nx.Graph()
     graph.add_nodes_from(documents.ID)

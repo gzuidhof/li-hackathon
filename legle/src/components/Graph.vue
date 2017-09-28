@@ -189,6 +189,10 @@ export default {
         stylizeGraph: function(nodes, edges) {
             for (var i = 0; i < nodes.length; i++) {
 
+                console.log(nodes);
+                if (!nodes[i].Sources) {
+                    continue;
+                }
                 var src = nodes[i].Sources[0];
                 var color = '#d6e6ff';
                 var fontColor = '#EEE';
