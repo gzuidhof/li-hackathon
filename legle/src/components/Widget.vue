@@ -1,7 +1,7 @@
 <template>
 <form class="sidebar" v-on:submit.prevent="onEnter">
     <div class="widget widget-search animated fadeInLeft">
-      <input class="search-input" placeholder="Enter an ECLI number.." v-model="searchQuery"></input>
+      <input class="search-input" placeholder="Voer referentienummer in.." v-model="searchQuery"></input>
     </div>
 
   <div v-if="widgetVisible" class="animated fadeIn">
