@@ -10,9 +10,16 @@ CORS(app)
 def document():
     ecli = request.args.get('ecli')
     depth = request.args.get('depth', 2)
+    id = request.args.get('id')
+    where_clause = 'WHERE '
+    if ecli:
+        where_clause += f'd.SearchNumber="{ecli}",'
+    if id:
+        where_clause += f'd.id={id},'
+    where_clause = where_clause[:-1] + ' '
     query = (
-        f'MATCH (d:Document)-[r:REFERENCE*..{depth}]-(o:Document)'
-        f'WHERE d.SearchNumber="{ecli}"'
+        f'MATCH (d:Document)-[r:REFERENCE*..{depth}]-(o:Document)' +
+        where_clause +
         'RETURN DISTINCT([d] + o) as nodes, r'
     )
     print(query)
