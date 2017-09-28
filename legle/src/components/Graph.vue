@@ -18,13 +18,22 @@
 import 'vis';
 
 const COLORS = [
-    '#EEE', //light
-    '#68ADFF', //light
-    '#2D547E',
-    '#7295A6',
-    '#3F60D3',
-    '#A06EC9',
-    '#813BCE'
+    '#107FC9', //light
+    '#0E4EAD',
+    '#0B108C',
+    '#0C0F66',
+    '#07093D',
+    '#598de0',
+    '#3a6cbc',
+    '#1e4584',
+    '#0d5fe2',
+    '#11284c',
+    '#6b8ec4',
+    '#4a6287',
+    '#21385b',
+    '#7caaef',
+    '#4b8ced',
+    '#2c5ba3',
 ]
 
 const SOURCES = ['Rechtspraak.nl', 'Ove', 'Xpe', 'wet', 'Ken', 'Lok', 'Pra', 'Mem', 'FD', 'Eur',
@@ -70,7 +79,7 @@ export default {
       console.log("Graph changed, n nodes", nodes.length, 'n edjes', edges.length);
 
       for(var i = 0; i < nodes.length; i++) {
-          
+
           var src = nodes[i].Sources[0];
           var color = '#813BCE';
           var fontColor = '#EEE';
@@ -104,7 +113,7 @@ export default {
       };
 
       this.network.setData(data);
-      
+
       this.network.on('selectNode', (selection) => {
           var id = selection.nodes[0];
           let position = this.network.getPositions(id);
@@ -161,7 +170,7 @@ export default {
 }
 
 .red-background {
-    background: linear-gradient(290deg, #1c08c6, #59d3f7);
+    background: linear-gradient(290deg, #1e0fa9, #59d3f7);
     transition: all ease-in-out 500ms;
     position: absolute;
     z-index: 1;
