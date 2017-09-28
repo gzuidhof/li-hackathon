@@ -11,9 +11,9 @@ def document():
     ecli = request.args.get('ecli')
     depth = request.args.get('depth', 2)
     query = (
-        f'MATCH p=(d:Document)-[*..{depth}]-(o:Document)'
+        f'MATCH (d:Document)-[r:REFERENCE*..{depth}]-(o:Document)'
         f'WHERE d.SearchNumber="{ecli}"'
-        'RETURN DISTINCT([d] + o) as nodes, relationships(p) as r'
+        'RETURN DISTINCT([d] + o) as nodes, r'
     )
     print(query)
     result = session.run(query
