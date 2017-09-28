@@ -4,7 +4,7 @@
       <input class="search-input" placeholder="Enter an ECLI number.." v-model="searchQuery"></input>
     </div>
 
-  <div v-if="widgetVisible">
+  <div v-if="widgetVisible" class="animated fadeIn">
     <div class="widget widget-main">
         <div class="widget-section">
             <h3>Document</h3>
@@ -12,7 +12,7 @@
         <div class="widget-content">
         <table>
             <tbody>
-                <tr v-for="(value, key) in fields">
+                <tr v-for="(value, key) in widgetInfo.fields">
                 <td class="action">
                     <a>✔</a>
                 </td>
@@ -28,7 +28,7 @@
         
         <div class="widget-content">
             <h4 style="margin-top: -12px; margin-bottom: 6px;">Samenvatting</h4>
-            <p class="summary">{{summary}}</p>
+            <p class="summary">{{widgetInfo.summary}}</p>
         </div>
 
 
@@ -42,7 +42,7 @@
 <script>
 import Graph from './Graph.vue'
 export default {
-  props: ['onQuery'],
+  props: ['onQuery', 'widgetInfo', 'widgetVisible'],
   methods: {
       onEnter(asdf){
           console.log("Please search nao ", this.searchQuery);
@@ -52,14 +52,7 @@ export default {
   },
   data () {
     return {
-        widgetVisible: false,
         searchQuery: "",
-        fields: {
-            "ECLI": "ECLI:asdf234123asdff",
-            "Datum": "20-07-2013",
-            "Bron": "www.rechtspraak.nl",
-        },
-        summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris maximus purus id lacus elementum placerat. Ut id efficitur urna. Nunc sed porta leo, vitae imperdiet metus. Sed commodo ipsum arcu, non dignissim lectus blandit et. Vestibulum at ex leo. Sed imperdiet urna ut justo semper tempor. Fusce ultrices convallis dignissim. Cras accumsan viverra est quis rutrum. Suspendisse potenti. Ut sodales eu justo eget malesuada. Integer tincidunt felis quis ex scelerisque varius.",
     }
   },
   created() {
