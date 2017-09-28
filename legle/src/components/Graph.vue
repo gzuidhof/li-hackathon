@@ -67,15 +67,23 @@ export default {
                     edges: {
                         length : 250,
                         arrows: {
-                          to:     {enabled: true, scaleFactor:1, type:'arrow'},
-                          middle: {enabled: false, scaleFactor:1, type:'arrow'},
-                          from:   {enabled: false, scaleFactor:1, type:'arrow'}
+                          to:     {enabled: true, scaleFactor:1}
                         },
                     },
                     layout: {
                         randomSeed : 420
+                    },
+                    physics: {
+                      enabled: true,
+                      barnesHut: {
+                        gravitationalConstant: -2000,
+                        centralGravity: 0.3,
+                        springLength: 95,
+                        springConstant: 0.04,
+                        damping: 0.09,
+                        avoidOverlap: 0
+                      }
                     }
-
                 };
 
                 if (nodes.length > 200) {
@@ -217,13 +225,12 @@ export default {
                     label = '\n' + nodes[i].SearchNumber + '\n';
                 }
                 nodes[i]['label'] = label;
-
+                console.log(nodes[i])
                 console.log(label);
             }
             for(var i = 0; i < edges.length; i++){
                 let count = edges[i].count;
-                console.log(edges[i]);
-                edges[i]['value'] = count*10;
+                edges[i]['value'] = count*2;
             }
 
         },
