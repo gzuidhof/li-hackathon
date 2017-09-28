@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-    <div class="red-top-bar"></div>
+    <div class="red-top-bar" :style="{opacity: showRedBackground ? '0': '1.0'}"></div>
     <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo" :isTitle="isTitle" :query="query"></graph-view>
     <widget :onQuery="onQuery" :widgetVisible="widgetVisible" :widgetInfo="widgetInfo"></widget>
     <span class="footer-text" :style="{color: showRedBackground ? '#f3f3f3' : '#343434'}">Legle ✦ <span style="opacity: 0.8; font-style: italic">niet zoeken maar ontdekken</span> </span>
@@ -84,6 +84,7 @@ export default {
   background-color: #236fb1;
   width: 100%;
   z-index: 5;
+  transition: all 450ms ease-in-out;
 }
 
 .main-container {
