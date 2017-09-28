@@ -125,6 +125,10 @@ function shortenString(string, maxLength) {
   transition: all cubic-bezier(0.19, 1, 0.22, 1) 500ms;
 }
 
+.footer-text span {
+  font-size: 0.75em;
+}
+
 .footer-text:hover {
   transform: scale(1.125);
 }
