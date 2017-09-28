@@ -51,7 +51,7 @@ export default {
       }
       console.log(Widget.data(), query);
 
-      fetch(`http://0c50a667.ngrok.io/document?ecli=${query}`)
+      fetch(`http://bf64f785.ngrok.io/document?ecli=${query}`)
         .then((response) => response.json())
         .then((data) => {
           let nodes = [];
