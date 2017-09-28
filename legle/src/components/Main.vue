@@ -120,9 +120,9 @@ function shortenString(string, maxLength) {
   color: #343434;
   position: absolute;
   bottom: 4px;
-  right: 24px;
-  font-size: 1.18em;
-  transition: all cubic-bezier(0.19, 1, 0.22, 1) 500ms;
+  right: 30px;
+  font-size: 1.78em;
+  transition: all cubic-bezier(0.19, 1, 0.22, 1) 400ms;
 }
 
 .footer-text span {
@@ -130,7 +130,7 @@ function shortenString(string, maxLength) {
 }
 
 .footer-text:hover {
-  transform: scale(1.125);
+  transform: translateX(-40px);
 }
 
 h1, h2 {
