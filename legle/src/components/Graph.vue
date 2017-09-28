@@ -197,7 +197,6 @@ export default {
 
         stylizeGraph: function(nodes, edges) {
             for (var i = 0; i < nodes.length; i++) {
-
                 var color = '#d6e6ff';
                 var fontColor = '#EEE';
 
