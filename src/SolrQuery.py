@@ -9,7 +9,7 @@ import extract_article
 
 import dateutil.parser
 
-selected_keys = ['ID', 'ProcedureType', 'TopLevelNavigation', 'Authors', 'Classifications', 'LawArea', 'Sources', 'Topic', 'Summary_Text', 'Title_Text', 'timestamp', 'SearchNumber']
+selected_keys = ['ID', 'PublicationNumber', 'ProcedureType', 'TopLevelNavigation', 'Authors', 'Classifications', 'LawArea', 'Sources', 'Topic', 'Summary_Text', 'Title_Text', 'timestamp', 'SearchNumber']
 law_keys = ['wetboek','bwnummer','artikel','lid']
 
 with open('wetten.txt', 'r') as f:
@@ -88,54 +88,69 @@ def extract_laws(doc, id):
 
     return law_references
 
-def results_to_csv(results, fname):
+def results_to_csv(results, fname, more_results=None):
     selected_fields = []
-    for r in results:
+    for r in tqdm.tqdm(results):
         selected_fields.append(extract_fields(r))
+
+    if more_results:
+        for r in tqdm.tqdm(more_results):
+            selected_fields.append(extract_fields(r))
 
     df = pd.DataFrame(data=np.asarray(selected_fields), columns=selected_keys)
     df.to_csv(fname, index=False)
 
+def results_to_csvs(results, more_results = None, collection=True, ECLI=True, law_references=True):
+    print("Results to csv")
+    if collection:
+        results_to_csv(results, "documents.csv")
+
+    references_db = []
+    law_references_db = []
+
+    for r in tqdm.tqdm(results):
+        # Get ECLI & LJN references
+        if ECLI:
+            ecli = r['SearchNumber'] if 'SearchNumber' in r else None
+            references, counts = extract_references(r['Text_Text_1'], ecli)
+
+            if references is not None and len(references) > 0:
+                for ref, c in zip(references, counts):
+                    references_db.append([r['ID'], ecli, ref, c])
+
+        # Get Law References
+        if 'ID' in r and law_references:
+            laws = extract_laws(r['Text_Text_1'], r['ID'])
+            if len(laws) > 0:
+                law_references_db.extend(laws)
+
+    if more_results:
+        for r in tqdm.tqdm(more_results):
+            # Get ECLI & LJN references
+            if ECLI:
+                ecli = r['SearchNumber'] if 'SearchNumber' in r else None
+                references, counts = extract_references(r['Text_Text_1'], ecli)
+
+                if references is not None and len(references) > 0:
+                    for ref, c in zip(references, counts):
+                        references_db.append([r['ID'], ecli, ref, c])
+
+            # Get Law References
+            if 'ID' in r and law_references:
+                laws = extract_laws(r['Text_Text_1'], r['ID'])
+                if len(laws) > 0:
+                    law_references_db.extend(laws)
+
+    references_pd = pd.DataFrame(data=references_db, columns=['ID', 'SearchNumber', 'References', 'Counts'])
+    references_pd.to_csv('references.csv')
+
+    lr_pd = pd.DataFrame(data=law_references_db, columns=['ID', 'wetboek', 'bwnummer', 'artikel', 'lid'])
+    lr_pd.to_csv("law_references.csv", index=None)
 
 def main():
     solr = pysolr.Solr('http://localhost:8983/solr/Legal_Data')
-    results = solr.search("*:*", rows=300)
-    # results_to_csv(results, "documents.csv")
-    """
-    law_references = []
+    results = solr.search("*:*", rows=50000)
 
-    for r in tqdm.tqdm(results):
-        results_laws = extract_laws(r['Text_Text_1'])
-        if results_laws is not None:
-            law_references.extend(results_laws)
-            print(results_laws)
-
-    #un, counts = np.unique(np.asarray(law_references), return_counts=True)
-    #sort = np.argsort(-counts)
-    #for u, c in zip(un[sort], counts[sort]):
-    #    print("{0}: {1}".format(u, c))
-
-    """
-
-    references_db = []
-    law_references = []
-
-    for r in tqdm.tqdm(results):
-        ecli = r['SearchNumber'] if 'SearchNumber' in r else None
-
-        #references, counts = extract_references(r['Text_Text_1'], ecli)
-
-        if 'ID' in  r:
-            laws = extract_laws(r['Text_Text_1'], r['ID'])
-            if len(laws) > 0:
-                law_references.extend(laws)
-
-        #if references is not None and len(references) > 0:
-        #    for ref, c in  zip(references, counts):
-        #        references_db.append([r['ID'], ecli, ref, c])
-
-    lr_pd = pd.DataFrame(data=law_references, columns=['ID','wetboek','bwnummer','artikel','lid'])
-    lr_pd.to_csv("law_references.csv", index=None)
 
 def countfunctie():
     solr = pysolr.Solr('http://localhost:8983/solr/Legal_Data')
