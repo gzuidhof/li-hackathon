@@ -126,6 +126,7 @@ export default {
                                   },
                                   id: n.id,
                                   liSearchQuery: n.liSearchQuery,
+                                  isWetBook: false
                               });
                             }
                             else{
