@@ -9,7 +9,8 @@
           <p>A tool for visualizing the connections between law documents by Legle</p>
         </div>
       </div>
-    <div class="center-greeting animated fadeIn" :class="showRedBackground ? '':'hide'">legle</div>
+    <div class="center-greeting animated fadeIn"
+    :class="(showRedBackground ? '':'hide ') + (isTitle ? '':'no-title')">{{isTitle? 'legle':'geen resultaten'}}</div>
   </div>
 </template>
 
@@ -37,7 +38,8 @@ export default {
   props: [
       'showRedBackground',
       'graph',
-      'setWidgetInfo' //Node info that is currently shown in the widget to the left
+      'setWidgetInfo', //Node info that is currently shown in the widget to the left,
+      'isTitle',
     ],
   watch: {
     graph: function(g) {
@@ -161,8 +163,12 @@ export default {
     font-size: 12.5em;
     z-index: 2;
     text-shadow: 1px 2px 3px rgba(0, 0, 0, 0.3);
-    transition: all ease-in-out 200ms;
+    transition: opacity ease-in-out 200ms;
     opacity: 1;
+}
+
+.no-title {
+    font-size: 3em;
 }
 
 .center-greeting.hide{

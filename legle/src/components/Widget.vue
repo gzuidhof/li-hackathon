@@ -179,7 +179,6 @@ td {
 
 .mr:hover {
     background-color: #ab43d6;
-
 }
 
 </style>
