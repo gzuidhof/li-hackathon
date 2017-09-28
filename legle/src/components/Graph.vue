@@ -9,7 +9,7 @@
                 <p>A tool for visualizing the connections between law documents by Legle</p>
             </div>
         </div>
-        <div class="center-greeting animated fadeIn" :class="(showRedBackground ? '':'hide ') + (isTitle ? '':'no-title')">{{isTitle? 'legle':'geen resultaten'}}</div>
+        <div class="center-greeting animated fadeIn" :class="(showRedBackground ? '':'hide ') + (isTitle ? '':'no-title')">{{isTitle? 'leegle':'geen resultaten'}}</div>
     </div>
 </template>
 
