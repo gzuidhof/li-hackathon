@@ -47,6 +47,7 @@ export default {
       onEnter(asdf){
           console.log("Please search nao ", this.searchQuery);
           this.onQuery(this.searchQuery);
+          this.$route.query.q = this.searchQuery;
       }
   },
   data () {
@@ -60,7 +61,13 @@ export default {
         },
         summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris maximus purus id lacus elementum placerat. Ut id efficitur urna. Nunc sed porta leo, vitae imperdiet metus. Sed commodo ipsum arcu, non dignissim lectus blandit et. Vestibulum at ex leo. Sed imperdiet urna ut justo semper tempor. Fusce ultrices convallis dignissim. Cras accumsan viverra est quis rutrum. Suspendisse potenti. Ut sodales eu justo eget malesuada. Integer tincidunt felis quis ex scelerisque varius.",
     }
-  }
+  },
+  created() {
+    if (this.$route.query.q) {
+      this.searchQuery = this.$route.query.q;
+      this.onEnter();
+    }
+  },
 }
 </script>
 
