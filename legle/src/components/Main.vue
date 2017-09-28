@@ -51,7 +51,7 @@ export default {
       }
       console.log(Widget.data(), query);
 
-      fetch(`http://0c50a667.ngrok.io/document?ecli=${query}`)
+      fetch(`http://bf64f785.ngrok.io/document?ecli=${query}`)
         .then((response) => response.json())
         .then((data) => {
           let nodes = [];
@@ -119,8 +119,8 @@ function shortenString(string, maxLength) {
   opacity: 0.65;
   color: #343434;
   position: absolute;
-  bottom: 4px;
-  right: 30px;
+  bottom: 6px;
+  right: 42px;
   font-size: 1.78em;
   transition: all cubic-bezier(0.19, 1, 0.22, 1) 400ms;
 }
