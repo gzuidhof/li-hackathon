@@ -172,13 +172,13 @@ td {
 
 .mr {
     margin-right: 8px;
-    background-color: #b659dc;
+    background-color: #3f60da;
     color: #eee;
     border: 1px solid #eee;
 }
 
 .mr:hover {
-    background-color: #ab43d6;
+    background-color: #4f70ea;
 }
 
 </style>

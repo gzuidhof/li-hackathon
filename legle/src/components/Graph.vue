@@ -75,7 +75,12 @@ export default {
 
           for(var j = 0; j < SOURCES.length; j++) {
               var colorIndex = j % COLORS.length;
-              if (src.startsWith(SOURCES[j])) {
+
+              if (src.startsWith('Rechtspraak.nl')) {
+                color = '#EEE';
+                fontColor = '#555';
+              }
+              else if (src.startsWith(SOURCES[j])) {
                   color = COLORS[colorIndex];
                   break;
               }
