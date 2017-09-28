@@ -128,6 +128,14 @@ export default {
                                   liSearchQuery: n.liSearchQuery,
                               });
                             }
+                            else{
+                              this.setWidgetInfo({
+                                  summary: n.Text,
+                                  fields: {
+                                      "Wet": n.SearchNumber
+                                  }
+                              });
+                            }
                             break;
                         }
                     }
@@ -224,7 +232,7 @@ export default {
                         nodes[i].SearchNumber = nodes[i].Sources[0];
                     }
                     else {
-                      nodes[i].SearchNumber = 'law';
+                      nodes[i].SearchNumber = nodes[i].Law;
                     }
                     if(nodes[i].Summary){
                         nodes[i].liSearchQuery = nodes[i].Summary.substr(0, 120);
@@ -238,6 +246,9 @@ export default {
                     label = '\n' + nodes[i].SearchNumber + '\n';
                 }
                 nodes[i]['label'] = label;
+                if(nodes[i].Law){
+                  nodes[i]['shape'] = 'box';
+                }
                 console.log(nodes[i])
                 console.log(label);
             }
