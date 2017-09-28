@@ -45,6 +45,28 @@ export default {
     graph: function(g) {
       let {nodes, edges} = g;
 
+        if (!this.network) {
+            const options = {
+            nodes: {
+                color: '#e00',
+                font: {
+                    color: '#eee',
+                },
+                shape: 'ellipse',
+            }
+        };
+
+        if(nodes.length > 200) {
+            options['layout'] = {
+                improvedLayout: false
+            };
+        };
+        const nodesDataSet = new vis.DataSet();
+        const edgesDataSet = new vis.DataSet();
+        const container = document.getElementById('container');
+        this.network = new vis.Network(container, {nodes: nodesDataSet, edges: edgesDataSet}, options);
+      }
+
       console.log("Graph changed, n nodes", nodes.length, 'n edjes', edges.length);
 
       for(var i = 0; i < nodes.length; i++) {
@@ -68,7 +90,7 @@ export default {
           nodes[i]['color'] = color;
           nodes[i]['font'] = {
               color: fontColor,
-          }
+          };
 
       }
 
@@ -76,30 +98,24 @@ export default {
       let edgesDataSet = new vis.DataSet(edges);
 
       // create a network
-      var container = document.getElementById('container');
       var data = {
         nodes: nodesDataSet,
         edges: edgesDataSet
       };
-      var options = {
-          nodes: {
-              color: '#e00',
-              font: {
-                  color: '#eee',
-              },
-              shape: 'ellipse',
-          }
-      };
 
-      if(nodes.length > 200) {
-          options['layout'] = {
-              improvedLayout: false
-          };
-      }
-
-      var network = new vis.Network(container, data, options);
-      network.on('selectNode', (selection) => {
+      this.network.setData(data);
+      
+      this.network.on('selectNode', (selection) => {
           var id = selection.nodes[0];
+          let position = this.network.getPositions(id);
+          position = position[Object.keys(position)[0]];
+          this.network.moveTo({
+              position,
+              animation: {
+                  duration: 500,
+                  easingFunction: "easeOutQuad"
+              }
+          });
           for (var n of this.graph.nodes) {
               if (n.id == id) {
                   console.log("SELECTED", n);
@@ -117,14 +133,16 @@ export default {
               }
           }
         });
-     network.on('deselectNode', () => {
-         console.log("DESELECT");
-         this.setWidgetInfo(null);
-     })
+        this.network.on('deselectNode', () => {
+            console.log("DESELECT");
+            this.setWidgetInfo(null);
+        });
     }
   },
 
-  mounted: function () {},
+  mounted: function () {
+
+  },
 
   data () {
     return {
