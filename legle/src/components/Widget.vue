@@ -32,14 +32,14 @@
         </div>
 
         <div class="li-button-wrapper" :href="widgetInfo.id">
-            <a target='_blank' :href="'http://www.legalintelligence.com/documents/' + widgetInfo.id">
+            <a target='_blank' :href="leftLink">
             <div class="li-button mr">
             Openen
             </div>
             </a>
-            <a target='_blank' :href="'https://www.legalintelligence.com/SearchResults?q='+ widgetInfo.liSearchQuery">
+            <a target='_blank' :href="rightLink">
             <div class="li-button">
-            Zoeken in Legal Intelligence
+            {{rightText}}
             </div>
             </a>
         </div>
@@ -64,6 +64,29 @@ export default {
   data () {
     return {
         searchQuery: "",
+    }
+  },
+  computed: {
+    leftLink() {
+        if(!this.widgetInfo) return;
+        if (this.widgetInfo.isWetBook) {
+            return 'http://www.wetboekofzo.com/documents/' + this.widgetInfo.id;
+        }
+        else {
+            return 'http://www.legalintelligence.com/documents/' + this.widgetInfo.id;
+        }
+    },
+    rightLink() {
+        if(!this.widgetInfo) return;
+        if (this.widgetInfo.isWetBook) {
+            return 'http://www.wetboekofzo.com/documents/' + 'iets';
+        }
+        else {
+            return 'https://www.legalintelligence.com/SearchResults?q=' + this.widgetInfo.liSearchQuery;
+        }
+    },
+    rightText() {
+        return 'Zoeken in Legal Intelligence';
     }
   },
   created() {

@@ -32,6 +32,7 @@ export default {
       },
       widgetVisible: false,
       isTitle: true,
+      isWetBook: false,
     }
   },
   methods: {
