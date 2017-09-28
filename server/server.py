@@ -18,8 +18,9 @@ def document():
         where_clause += f'd.id={id},'
     where_clause = where_clause[:-1] + ' '
     query = (
-        f'MATCH (d:Document)-[r:REFERENCE*..{depth}]-(o:Document)' +
+        f'MATCH (d)-[r*..{depth}]-(o)' +
         where_clause +
+        'AND all(x in r WHERE type(x) = "REFERENCE" OR type(x) = "LAW_REFERENCE")' + 
         'RETURN DISTINCT([d] + o) as nodes, r'
     )
     print(query)
