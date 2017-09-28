@@ -66,7 +66,11 @@ export default {
                     },
                     edges: {
                         length : 250
+                    },
+                    layout: {
+                        randomSeed : 420
                     }
+
                 };
 
                 if (nodes.length > 200) {
@@ -96,7 +100,7 @@ export default {
                             console.log("SELECTED", n);
 
                             var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
-                            
+
 
                             this.setWidgetInfo({
                                 summary: n.Summary,
