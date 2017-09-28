@@ -93,7 +93,6 @@ def results_to_csv(results, fname):
 
 def main():
     solr = pysolr.Solr('http://localhost:8983/solr/Legal_Data')
-    # field = "SearchNumber"
     results = solr.search("*:*", rows=50000)
     # results_to_csv(results, "documents.csv")
     """
@@ -121,14 +120,16 @@ def main():
             for ref, c in  zip(references, counts):
                 references_db.append([r['ID'], ecli, ref, c])
 
-    #df = pd.DataFrame(data=references_db, columns=['ID','SearchNumber','References','Counts'])
-    #df.to_csv("references.csv", index=False)
 
-    # content = np.asarray([r[field] for r in results if field in r])
-    # un,c = np.unique(content, return_counts=True)
-    # sort = np.argsort(-c)
-    # for type, count in zip(un[sort], c[sort]):
-    #    print("{0}: {1}".format(type, count))
+def countfunctie():
+    solr = pysolr.Solr('http://localhost:8983/solr/Legal_Data')
+    field = "Sources"
+    results = solr.search("*:*", rows=50000)
+    content = np.asarray([r[field] for r in results if field in r])
+    un,c = np.unique(content, return_counts=True)
+    sort = np.argsort(-c)
+    for type, count in zip(un[sort], c[sort]):
+        print("{0}: {1}".format(type, count))
 
 if __name__ == '__main__':
     main()

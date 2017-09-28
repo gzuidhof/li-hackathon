@@ -3,30 +3,37 @@ import pandas as pd
 import tqdm
 import numpy as np
 
-click_db = {}
-doc_db = {}
+users_to_docs = {}
+docs_to_users = {}
 
 NUM_DOCS = 50000
 docs = []
 
+
 def build_databases(solr_docs, solr_clicks):
-    ids = solr_docs.search("*:*", rows=50000, fl='ID')
-    for id_ in tqdm.tqdm(ids):
-        id = id_['ID']
-        docs.append(id)
-        users_clicked = solr_clicks.search("DocumentID:{0}".format(id), fl='UserID')
-        ids_clicked = []
-        for u in users_clicked:
-            if 'UserID' in u:
-                user_id = u['UserID']
-                if users_clicked not in ids_clicked:
-                    ids_clicked.append(user_id)
-                    if user_id in click_db:
-                        if id not in click_db[user_id]:
-                            click_db[user_id].append(id)
-                    else:
-                        click_db[user_id] = [id]
-        doc_db[id] = ids_clicked
+    doc_ids = solr_docs.search("*:*", rows=50000, fl='ID')
+
+    # Get the document IDs in the collection
+    for doc_id_json in tqdm.tqdm(doc_ids):
+        doc_id = doc_id_json['ID']
+
+        # For every doc, find the users that clicked on the document
+        users_clicked = solr_clicks.search("DocumentID:{0}".format(doc_id), fl='UserID')
+        if len(users_clicked) > 0:
+            # Create the set of users (without duplicates)
+            user_ids = list(set([user_clicked_json['UserID'] for user_clicked_json in users_clicked if 'UserID' in user_clicked_json]))
+
+            # Add the users that clicked on this document to the docs_to_users dict
+            docs_to_users[doc_id] = user_ids
+            docs.append(doc_id)
+
+            for user_id in user_ids:
+                # If the user id is in the users_to_docs, but the doc is not in that user entry, add it
+                if user_id in users_to_docs:
+                    if doc_id not in users_to_docs[user_id]:
+                        users_to_docs[user_id].append(doc_id)
+                else:
+                    users_to_docs[user_id] = [doc_id]
 
 def main():
     solr_docs = pysolr.Solr('http://localhost:8983/solr/Legal_Data')
@@ -36,20 +43,18 @@ def main():
 
     clicks = []
 
-    for doc, users_clicked in tqdm.tqdm(doc_db.items()):
-        relevant_docs = {}
-        for user in users_clicked:
-            for doc_clicked in click_db[user]:
-                if doc_clicked is not doc:
-                    if doc_clicked in relevant_docs:
-                        relevant_docs[doc_clicked] += 1
-                    else:
-                        relevant_docs[doc_clicked] = 1
-        for other_doc, count in  relevant_docs.items():
-            clicks.append([doc, other_doc, count])
+    for i, doc_a in tqdm.tqdm(enumerate(docs)):
+        for j, doc_b in enumerate(docs[i+1:]):
+            assert doc_a != doc_b
+            users_clicked_a = set(docs_to_users[doc_a])
+            users_clicked_b = set(docs_to_users[doc_b])
+            users_clicked_both = users_clicked_a.intersection(users_clicked_b)
+            if len(users_clicked_both) > 0:
+                clicks.append([doc_a,doc_b,len(users_clicked_both)])
 
-    clicks_pd = pd.DataFrame(data=clicks,columns=['ID','OtherID','Count'])
-    clicks_pd.to_csv('click_data.csv',index=False)
+    clicks_pd = pd.DataFrame(data=clicks, columns=['ID', 'OtherID', 'Count'])
+    clicks_pd.to_csv('click_data.csv', index=False)
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     main()
