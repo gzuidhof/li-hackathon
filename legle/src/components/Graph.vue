@@ -9,7 +9,7 @@
                 <p>A tool for visualizing the connections between law documents by Legle</p>
             </div>
         </div>
-        <div class="center-greeting animated fadeIn" :class="(showRedBackground ? '':'hide ') + (isTitle ? '':'no-title')">{{isTitle? 'legle':'geen resultaten'}}</div>
+        <div class="center-greeting animated fadeIn" :class="(showRedBackground ? '':'hide ') + (isTitle ? '':'no-title')">{{isTitle? 'leegle':'geen resultaten'}}</div>
     </div>
 </template>
 
@@ -67,15 +67,23 @@ export default {
                     edges: {
                         length : 250,
                         arrows: {
-                          to:     {enabled: true, scaleFactor:1, type:'arrow'},
-                          middle: {enabled: false, scaleFactor:1, type:'arrow'},
-                          from:   {enabled: false, scaleFactor:1, type:'arrow'}
+                          to:     {enabled: true, scaleFactor:1}
                         },
                     },
                     layout: {
                         randomSeed : 420
+                    },
+                    physics: {
+                      enabled: true,
+                      barnesHut: {
+                        gravitationalConstant: -2000,
+                        centralGravity: 0.3,
+                        springLength: 95,
+                        springConstant: 0.04,
+                        damping: 0.09,
+                        avoidOverlap: 0
+                      }
                     }
-
                 };
 
                 if (nodes.length > 200) {
@@ -106,19 +114,29 @@ export default {
 
                             var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
 
-
-                            this.setWidgetInfo({
-                                summary: n.Summary,
-                                fields: {
-                                    "ID": n.SearchNumber,
-                                    "Bron": n.Sources[0],
-                                    "Datum": n.Timestamp,
-                                    "Categorie": n.LawArea[0],
-                                    "Nummer": pubNumber,
-                                },
-                                id: n.id,
-                                liSearchQuery: n.liSearchQuery,
-                            });
+                            if(n.Sources){
+                              this.setWidgetInfo({
+                                  summary: n.Summary,
+                                  fields: {
+                                      "ID": n.SearchNumber,
+                                      "Bron": n.Sources[0],
+                                      "Datum": n.Timestamp,
+                                      "Categorie": n.LawArea[0],
+                                      "Nummer": pubNumber,
+                                  },
+                                  id: n.id,
+                                  liSearchQuery: n.liSearchQuery,
+                                  isWetBook: false
+                              });
+                            }
+                            else{
+                              this.setWidgetInfo({
+                                  summary: n.Text,
+                                  fields: {
+                                      "Wet": n.SearchNumber
+                                  }
+                              });
+                            }
                             break;
                         }
                     }
@@ -180,22 +198,23 @@ export default {
 
         stylizeGraph: function(nodes, edges) {
             for (var i = 0; i < nodes.length; i++) {
-
-                var src = nodes[i].Sources[0];
                 var color = '#d6e6ff';
                 var fontColor = '#EEE';
 
-                for (var j = 0; j < SOURCES.length; j++) {
-                    var colorIndex = j % COLORS.length;
+                if(nodes[i].Sources) {
+                  var src = nodes[i].Sources[0];
+                  for (var j = 0; j < SOURCES.length; j++) {
+                      var colorIndex = j % COLORS.length;
 
-                    if (src.startsWith('Rechtspraak.nl')) {
-                        color = '#EEE';
-                        fontColor = '#555';
-                    }
-                    else if (src.startsWith(SOURCES[j])) {
-                        color = COLORS[colorIndex];
-                        break;
-                    }
+                      if (src.startsWith('Rechtspraak.nl')) {
+                          color = '#EEE';
+                          fontColor = '#555';
+                      }
+                      else if (src.startsWith(SOURCES[j])) {
+                          color = COLORS[colorIndex];
+                          break;
+                      }
+                  }
                 }
 
                 if (color == '#EEE' || color == '#68ADFF' || color == '#d6e6ff') {
@@ -209,21 +228,38 @@ export default {
 
                 let label = '';
                 if (!nodes[i].SearchNumber) {
-                    nodes[i].SearchNumber = nodes[i].Sources[0];
-                    nodes[i].liSearchQuery = nodes[i].Summary.substr(0, 120);
-                    label = chunkSubstr(shortenString(nodes[i].SearchNumber, 57), 20).join('\n');
+                    if(nodes[i].Sources){
+                        nodes[i].SearchNumber = nodes[i].Sources[0];
+                    }
+                    else {
+                      nodes[i].SearchNumber = nodes[i].Law;
+                    }
+                    if(nodes[i].Summary){
+                        nodes[i].liSearchQuery = nodes[i].Summary.substr(0, 120);
+                    }
+                    else {
+                      nodes[i].liSearchQuery = 'law2';
+                    }
+                    if(!nodes[i].Law){
+                        label = chunkSubstr(shortenString(nodes[i].SearchNumber, 57), 20).join('\n');
+                    }
+                    else{
+                      label = chunkSubstr(nodes[i].SearchNumber, 20).join('\n');
+                    }
                 } else {
                     nodes[i].liSearchQuery = nodes[i].PublicationNumber;
                     label = '\n' + nodes[i].SearchNumber + '\n';
                 }
                 nodes[i]['label'] = label;
-
+                if(nodes[i].Law){
+                  nodes[i]['shape'] = 'box';
+                }
+                console.log(nodes[i])
                 console.log(label);
             }
             for(var i = 0; i < edges.length; i++){
                 let count = edges[i].count;
-                console.log(edges[i]);
-                edges[i]['value'] = count*10;
+                edges[i]['value'] = count*2;
             }
 
         },

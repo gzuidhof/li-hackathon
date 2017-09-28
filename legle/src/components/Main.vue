@@ -3,18 +3,21 @@
     <div class="red-top-bar" :style="{opacity: showRedBackground ? '0': '1.0'}"></div>
     <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo" :isTitle="isTitle" :query="query"></graph-view>
     <widget :onQuery="onQuery" :widgetVisible="widgetVisible" :widgetInfo="widgetInfo"></widget>
-    <span class="footer-text" :style="{color: showRedBackground ? '#f3f3f3' : '#343434'}">Legle ✦ <span style="opacity: 0.8; font-style: italic">niet zoeken maar ontdekken</span> </span>
+    <options :isOnBackground="showRedBackground"></options>
+    <span class="footer-text" :style="{color: showRedBackground ? '#f3f3f3' : '#343434'}">Leegle ✦ <span style="opacity: 0.8; font-style: italic">niet zoeken maar ontdekken</span> </span>
   </div>
 </template>
 
 <script>
 import Graph from './Graph.vue'
 import Widget from './Widget.vue'
+import Options from './Options.vue'
 
 export default {
   components: {
     'graph-view': Graph,
     'widget': Widget,
+    'options': Options,
   },
   name: 'main',
   data () {
@@ -29,6 +32,7 @@ export default {
       },
       widgetVisible: false,
       isTitle: true,
+      isWetBook: false,
     }
   },
   methods: {
@@ -43,7 +47,7 @@ export default {
       }
     },
     query(id) {
-      return fetch(`http://bf64f785.ngrok.io/document?id=${id}`)
+      return fetch(`http://4dbd57ae.ngrok.io/document?id=${id}`)
         .then((response) => response.json());
     },
     onQuery(query) {
@@ -56,7 +60,7 @@ export default {
       }
       console.log(Widget.data(), query);
 
-      fetch(`http://bf64f785.ngrok.io/document?ecli=${query}`)
+      fetch(`http://4dbd57ae.ngrok.io/document?ecli=${query}`)
         .then((response) => response.json())
         .then((data) => {
           this.graph = {
