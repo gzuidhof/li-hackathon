@@ -32,14 +32,14 @@
         </div>
 
         <div class="li-button-wrapper" :href="widgetInfo.id">
-            <a :href="'http://www.legalintelligence.com/documents/' + widgetInfo.id">
+            <a target='_blank' :href="'http://www.legalintelligence.com/documents/' + widgetInfo.id">
             <div class="li-button mr">
             Openen
             </div>
             </a>
-            <a :href="'https://www.legalintelligence.com/SearchResults?q='+ widgetInfo.fields.ID">
+            <a target='_blank' :href="'https://www.legalintelligence.com/SearchResults?q='+ widgetInfo.liSearchQuery">
             <div class="li-button">
-            Openen in Legal Intelligence
+            Zoeken in Legal Intelligence
             </div>
             </a>
         </div>
@@ -68,7 +68,10 @@ export default {
   },
   created() {
     if (this.$route.query.q) {
-      this.searchQuery = this.$route.query.q;
+      this.searchQuery = this.$route.query.q.trim();
+      if (this.searchQuery.endsWith('.') || this.searchQuery.endsWith(',')) {
+          this.searchQuery = this.searchQuery.substring(0, this.searchQuery.length - 1).trim();
+      }
       this.onEnter();
     }
   },
@@ -160,7 +163,7 @@ td {
     font-size: 1.05em;
     text-align: center;
     color: #828080;
-    padding: 2px 8px;
+    padding: 2px 10px;
     border-radius: 4px;
     border: 1px solid #ccc;
 }
@@ -171,7 +174,7 @@ td {
 }
 
 .mr {
-    margin-right: 8px;
+    margin-right: 12px;
     background-color: #3f60da;
     color: #eee;
     border: 1px solid #eee;

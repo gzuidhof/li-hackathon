@@ -62,6 +62,10 @@ export default {
                             color: '#eee',
                         },
                         shape: 'ellipse',
+                        mass : 3
+                    },
+                    edges: {
+                        length : 250
                     }
                 };
 
@@ -90,6 +94,10 @@ export default {
                     for (var n of this.nodes) {
                         if (n.id == id) {
                             console.log("SELECTED", n);
+
+                            var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
+                            
+
                             this.setWidgetInfo({
                                 summary: n.Summary,
                                 fields: {
@@ -97,8 +105,10 @@ export default {
                                     "Bron": n.Sources[0],
                                     "Datum": n.Timestamp,
                                     "Categorie": n.LawArea[0],
+                                    "Nummer": pubNumber,
                                 },
                                 id: n.id,
+                                liSearchQuery: n.liSearchQuery,
                             });
                             break;
                         }
@@ -110,7 +120,8 @@ export default {
                 });
             }
 
-            this.stylizeGraph(nodes);
+            console.log('stylizing');
+            this.stylizeGraph(nodes, edges);
             this.nodes = nodes;
 
             console.log("Graph changed, n nodes", nodes.length, 'n edjes', edges.length);
@@ -132,7 +143,7 @@ export default {
         expandNode: function() {
             this.query(this.selected).then((response) => {
                 console.log(response);
-                this.stylizeGraph(response.docs)
+                this.stylizeGraph(response.docs, response.references);
                 for (let doc of response.docs) {
                     try {
                         this.nodesDataSet.add(doc);
@@ -158,7 +169,7 @@ export default {
             });
         },
 
-        stylizeGraph: function(nodes) {
+        stylizeGraph: function(nodes, edges) {
             for (var i = 0; i < nodes.length; i++) {
 
                 var src = nodes[i].Sources[0];
@@ -189,14 +200,23 @@ export default {
 
                 let label = '';
                 if (!nodes[i].SearchNumber) {
-                    nodes[i].SearchNumber = nodes[i].Title;
+                    nodes[i].SearchNumber = nodes[i].Sources[0];
+                    nodes[i].liSearchQuery = nodes[i].Summary.substr(0, 120);
                     label = chunkSubstr(shortenString(nodes[i].SearchNumber, 57), 20).join('\n');
                 } else {
+                    nodes[i].liSearchQuery = nodes[i].PublicationNumber;
                     label = '\n' + nodes[i].SearchNumber + '\n';
                 }
                 nodes[i]['label'] = label;
 
+                console.log(label);
             }
+            for(var i = 0; i < edges.length; i++){
+                let count = edges[i].count;
+                console.log(edges[i]);
+                edges[i]['value'] = count*10;
+            }
+
         },
 
 
@@ -237,7 +257,7 @@ function shortenString(string, maxLength) {
 .graph-view {
     width: 100%;
     height: 100%;
-    background-color: #f2f2f2;
+    background-color: #eff1f5;
     position: absolute;
     z-index: 0;
 }

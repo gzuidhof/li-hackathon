@@ -25,6 +25,7 @@ export default {
         fields: [],
         summary: "",
         id: "",
+        liSearchQuery: "",
       },
       widgetVisible: false,
       isTitle: true,
@@ -79,9 +80,10 @@ export default {
 
 .red-top-bar {
   position: absolute;
-  height: 4px;
-  background-color: #e61515;
+  height: 2px;
+  background-color: #236fb1;
   width: 100%;
+  z-index: 5;
 }
 
 .main-container {
@@ -94,10 +96,10 @@ export default {
   opacity: 0.65;
   color: #343434;
   position: absolute;
-  bottom: 4px;
-  right: 24px;
-  font-size: 1.18em;
-  transition: all cubic-bezier(0.19, 1, 0.22, 1) 500ms;
+  bottom: 6px;
+  right: 42px;
+  font-size: 1.78em;
+  transition: all cubic-bezier(0.19, 1, 0.22, 1) 400ms;
 }
 
 .footer-text span {
@@ -105,7 +107,7 @@ export default {
 }
 
 .footer-text:hover {
-  transform: scale(1.125);
+  transform: translateX(-40px);
 }
 
 h1, h2 {
@@ -122,7 +124,8 @@ li {
   margin: 0 10px;
 }
 
-a {
-  color: #e03232;
+a, a:hover {
+  color: #404cff;
+  text-decoration: none;
 }
 </style>
