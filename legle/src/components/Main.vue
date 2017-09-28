@@ -19,21 +19,29 @@ export default {
   name: 'main',
   data () {
     return {
-      showRedBackground: true,
+      showRedBackground: false,
       graph: {},
     }
   },
   methods: {
     onQuery(query) {
       this.showRedBackground = false;
+
+      if (query === '') {
+        this.showRedBackground = true;
+        return;
+      }
       console.log(Widget.data());
-      fetch(`http://localhost:5000/document?ecli=${query}`)
+
+      fetch(`http://1366ee3f.ngrok.io/document?ecli=${query}`)
         .then((response) => response.json())
         .then((data) => {
           let nodes = [];
           let edges = [];
           for (let doc of data.docs) {
-            nodes.push({...doc, label: shortenString(doc.Title, 30)});
+            const titleChunks = chunkSubstr(shortenString(doc.Title, 50), 14);
+            const title = titleChunks.join("\n");
+            nodes.push({...doc, label: title});
           }
           for (let edge of data.references) {
             edges.push({...edge});
@@ -41,10 +49,21 @@ export default {
           this.graph = {
             nodes,
             edges
-          };
+            };
         });
     }
   }
+}
+
+function chunkSubstr(str, size) {
+  var numChunks = Math.ceil(str.length / size),
+      chunks = new Array(numChunks);
+
+  for(var i = 0, o = 0; i < numChunks; ++i, o += size) {
+    chunks[i] = str.substr(o, size);
+  }
+
+  return chunks;
 }
 
 function shortenString(string, maxLength) {

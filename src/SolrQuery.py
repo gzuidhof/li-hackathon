@@ -7,9 +7,9 @@ import tqdm
 
 import dateutil.parser
 
-selected_keys = ['ID', 'ProcedureType', 'TopLevelNavigation', 'Authors', 'Classifications', 'LawArea', 'Sources',
-                 'Topic', 'Summary_Text', 'Title_Text', 'timestamp', 'SearchNumber']
+selected_keys = ['ID', 'ProcedureType', 'TopLevelNavigation', 'Authors', 'Classifications', 'LawArea', 'Sources', 'Topic', 'Summary_Text', 'Title_Text', 'timestamp', 'SearchNumber']
 
+''' temp
 with open('wetten.txt', 'r') as f:
     laws = f.read()
     laws_full = re.sub(';.+\n', "|", laws)
@@ -19,6 +19,7 @@ with open('wetten.txt', 'r') as f:
 
 ljn_re = "(LJN)[ :]*([A-Z]{2}) *([0-9]{4})"
 ecli_re = "ECLI:[A-Z]*:[A-Z]*:[0-9]*:[0-9]+"
+'''
 
 def extract_references(doc, ecli):
     # Search for ECLI numbers
@@ -39,7 +40,6 @@ def extract_references(doc, ecli):
         #    result_c.append((unique, count))
         return list(un), list(c)
     return None, None
-
 
 def extract_fields(result):
     values = []
@@ -113,14 +113,14 @@ def main():
     """
 
     references_db = []
-    
+
     for r in tqdm.tqdm(results):
         ecli = r['SearchNumber'] if 'SearchNumber' in r else None
         references, counts = extract_references(r['Text_Text_1'], ecli)
         if references is not None and len(references) > 0:
             for ref, c in  zip(references, counts):
                 references_db.append([r['ID'], ecli, ref, c])
-    
+
     #df = pd.DataFrame(data=references_db, columns=['ID','SearchNumber','References','Counts'])
     #df.to_csv("references.csv", index=False)
 
@@ -129,7 +129,6 @@ def main():
     # sort = np.argsort(-c)
     # for type, count in zip(un[sort], c[sort]):
     #    print("{0}: {1}".format(type, count))
-
 
 if __name__ == '__main__':
     main()
