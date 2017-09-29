@@ -30,7 +30,7 @@ def document():
         query = (
             f'MATCH (d)-[r*..{depth}]-(o)' +
             where_clause +
-            'AND all(x in r WHERE type(x) = "ALSO_VIEWED"' + 
+            'AND all(x in r WHERE type(x) = "ALSO_VIEWED")' + 
             'RETURN DISTINCT([d] + o) as nodes, r'
         )
     else:
@@ -75,4 +75,5 @@ if __name__ == '__main__':
     driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "joris"))
     session = driver.session()
 
-    app.run(host='0.0.0.0', debug=True, use_reloader=True)
+    app.run(host='0.0.0.0', port=6000, debug=True, use_reloader=True)
+
