@@ -119,14 +119,14 @@ export default {
                             maxVisible: 30,
                             drawThreshold: 5
                           },
-                        },
+                        },/*
                         chosen: { //Does not work.
                             node :function(values, id, selected, hovering) {
                                 console.log("Chosen change")
                                 values.physics = false;
                                 values.node.size = 50;
                             }
-                        },
+                        },*/
                     },
                     edges: {
                         length : 250,
@@ -307,14 +307,14 @@ export default {
 
                 nodes[i]['node'] = {title: nodes[i].Title}  //Doesn't actually work
                 nodes[i]['title'] = nodes[i].Title; //Doesn't actually work
-
+                /*
                 nodes[i]['chosen'] = { //Should work, but doens't
                     'node': function(values, id, selected, hovering) {
                                 console.log("Chosen change")
                                 values.physics = false;
                                 values.node.size = 50;
                             }
-                }
+                }*/
 
                 if(nodes[i].Sources) {
                   var src = nodes[i].Sources[0];
