@@ -134,7 +134,9 @@ export default {
                                   summary: n.Text,
                                   fields: {
                                       "Wet": n.SearchNumber
-                                  }
+                                  },
+                                  link : n.Link,
+                                  isWetBook: true
                               });
                             }
                             break;

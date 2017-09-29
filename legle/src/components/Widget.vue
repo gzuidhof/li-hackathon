@@ -25,7 +25,7 @@
         </table>
         </div>
 
-        
+
         <div class="widget-content">
             <h4 style="margin-top: -12px; margin-bottom: 6px;">Samenvatting</h4>
             <p class="summary">{{widgetInfo.summary}}</p>
@@ -70,7 +70,7 @@ export default {
     leftLink() {
         if(!this.widgetInfo) return;
         if (this.widgetInfo.isWetBook) {
-            return 'http://www.wetboekofzo.com/documents/' + this.widgetInfo.id;
+            return 'http://www.maxius.nl' + this.widgetInfo.link;
         }
         else {
             return 'http://www.legalintelligence.com/documents/' + this.widgetInfo.id;
@@ -79,7 +79,7 @@ export default {
     rightLink() {
         if(!this.widgetInfo) return;
         if (this.widgetInfo.isWetBook) {
-            return 'http://www.wetboekofzo.com/documents/' + 'iets';
+            return 'http://www.maxius.nl' + this.widgetInfo.link;
         }
         else {
             return 'https://www.legalintelligence.com/SearchResults?q=' + this.widgetInfo.liSearchQuery;
