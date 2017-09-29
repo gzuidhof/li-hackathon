@@ -63,6 +63,7 @@ export default {
       fetch(`http://localhost:5000/document?ecli=${query}`)
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
           this.graph = {
             nodes: data.docs,
             edges: data.references,

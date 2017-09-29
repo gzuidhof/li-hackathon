@@ -198,8 +198,6 @@ export default {
 
         stylizeGraph: function(nodes, edges) {
             for (var i = 0; i < nodes.length; i++) {
-
-                console.log(nodes);
                 if (!nodes[i].Sources) {
                     continue;
                 }
@@ -260,8 +258,6 @@ export default {
                 if(nodes[i].Law){
                   nodes[i]['shape'] = 'box';
                 }
-                console.log(nodes[i])
-                console.log(label);
             }
             for(var i = 0; i < edges.length; i++){
                 let count = edges[i].count;
