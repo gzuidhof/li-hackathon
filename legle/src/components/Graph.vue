@@ -170,7 +170,7 @@ export default {
 
                             // Doesn't work ffs
                             n.size = 500;
-                            n.physics = false;
+                            n.node.physics = false;
 
                             var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
 
@@ -289,8 +289,16 @@ export default {
                 var color = '#d6e6ff';
                 var fontColor = '#EEE';
 
-                nodes[i]['node'] = {title: nodes[i].Title}
+                nodes[i]['node'] = {title: nodes[i].Title}  //Doesn't actually work
                 nodes[i]['title'] = nodes[i].Title; //Doesn't actually work
+
+                nodes[i]['chosen'] = { //Should work, but doens't
+                    'node': function(values, id, selected, hovering) {
+                                console.log("Chosen change")
+                                values.physics = false;
+                                values.node.size = 50;
+                            }
+                }
 
                 if(nodes[i].Sources) {
                   var src = nodes[i].Sources[0];
