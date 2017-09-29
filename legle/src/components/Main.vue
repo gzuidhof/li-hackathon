@@ -13,6 +13,8 @@ import Graph from './Graph.vue'
 import Widget from './Widget.vue'
 import Options from './Options.vue'
 
+const SERVER_URL = 'http://4dbd57ae.ngrok.io'
+
 export default {
   components: {
     'graph-view': Graph,
@@ -47,7 +49,7 @@ export default {
       }
     },
     query(id) {
-      return fetch(`http://localhost:5000/document?id=${id}`)
+      return fetch(`${SERVER_URL}/document?id=${id}`)
         .then((response) => response.json());
     },
     onQuery(query) {
@@ -60,7 +62,7 @@ export default {
       }
       console.log(Widget.data(), query);
 
-      fetch(`http://localhost:5000/document?ecli=${query}`)
+      fetch(`${SERVER_URL}/document?ecli=${query}`)
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
