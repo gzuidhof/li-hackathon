@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from werkzeug.exceptions import BadRequest
 from flask_cors import CORS
 from neo4j.v1 import GraphDatabase, basic_auth
 
@@ -11,18 +12,29 @@ def document():
     ecli = request.args.get('ecli')
     depth = request.args.get('depth', 2)
     id = request.args.get('id')
+    mode = request.args.get('mode', 'referenties')
     where_clause = 'WHERE '
     if ecli:
         where_clause += f'd.SearchNumber="{ecli}",'
     if id:
         where_clause += f'd.id={id},'
     where_clause = where_clause[:-1] + ' '
-    query = (
-        f'MATCH (d)-[r*..{depth}]-(o)' +
-        where_clause +
-        'AND all(x in r WHERE type(x) = "REFERENCE" OR type(x) = "LAW_REFERENCE")' + 
-        'RETURN DISTINCT([d] + o) as nodes, r'
-    )
+    if mode == 'referenties':
+        query = (
+            f'MATCH (d)-[r*..{depth}]-(o)' +
+            where_clause +
+            'AND all(x in r WHERE type(x) = "REFERENCE" OR type(x) = "LAW_REFERENCE")' + 
+            'RETURN DISTINCT([d] + o) as nodes, r'
+        )
+    elif mode == 'clicks':
+        query = (
+            f'MATCH (d)-[r*..{depth}]-(o)' +
+            where_clause +
+            'AND all(x in r WHERE type(x) = "ALSO_VIEWED"' + 
+            'RETURN DISTINCT([d] + o) as nodes, r'
+        )
+    else:
+        raise BadRequest('Unknown mode '+mode)
     print(query)
     result = session.run(query
     )
