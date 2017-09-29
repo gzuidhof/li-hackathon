@@ -120,7 +120,7 @@ export default {
                                   fields: {
                                       "ID": n.SearchNumber,
                                       "Bron": n.Sources[0],
-                                      "Datum": n.Timestamp,
+                                      "Datum": Date(n.Timestamp),
                                       "Categorie": n.LawArea[0],
                                       "Nummer": pubNumber,
                                   },
@@ -134,7 +134,9 @@ export default {
                                   summary: n.Text,
                                   fields: {
                                       "Wet": n.SearchNumber
-                                  }
+                                  },
+                                  link : n.Link,
+                                  isWetBook: true
                               });
                             }
                             break;
@@ -198,10 +200,6 @@ export default {
 
         stylizeGraph: function(nodes, edges) {
             for (var i = 0; i < nodes.length; i++) {
-                if (!nodes[i].Sources) {
-                    continue;
-                }
-                var src = nodes[i].Sources[0];
                 var color = '#d6e6ff';
                 var fontColor = '#EEE';
 
@@ -258,6 +256,8 @@ export default {
                 if(nodes[i].Law){
                   nodes[i]['shape'] = 'box';
                 }
+                console.log(nodes[i])
+                console.log(label);
             }
             for(var i = 0; i < edges.length; i++){
                 let count = edges[i].count;
