@@ -129,7 +129,7 @@ export default {
                         },*/
                     },
                     edges: {
-                        length : 250,
+                        length : 350,
                         arrows: {
                           to:     {enabled: true, scaleFactor:1}
                         },
@@ -201,6 +201,9 @@ export default {
                              };
                              if (n.InstanceType != "0") {
                                  fields['Instantie'] = INSTANCE_MAP[n.InstanceType];
+                             }
+                             if (n.Verdict === 'True') {
+                                 fields['Vernietigd'] = '';
                              }
                               this.setWidgetInfo({
                                   summary: n.Summary,
