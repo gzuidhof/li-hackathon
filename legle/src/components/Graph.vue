@@ -113,7 +113,7 @@ export default {
                           min : 10,
                           max : 100,
                           label: {
-                            enabled: true,
+                            enabled: false,
                             min: 14,
                             max: 30,
                             maxVisible: 30,
@@ -129,7 +129,7 @@ export default {
                         },*/
                     },
                     edges: {
-                        length : 350,
+                        length : 300,
                         arrows: {
                           to:     {enabled: true, scaleFactor:1}
                         },
@@ -180,8 +180,8 @@ export default {
                             console.log("SELECTED", n);
 
                             // Doesn't work ffs
-                            n.size = 500;
-                            n.node.physics = false;
+                            //n.size = 500;
+                            //n.node.physics = false;
 
                             var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
                             var d = Date(n.Timestamp);
