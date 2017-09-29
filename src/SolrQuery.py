@@ -21,6 +21,9 @@ selected_keys = ['ID', 'PublicationNumber', 'ProcedureType', 'TopLevelNavigation
 verdict_keys = ['InstanceType','Verdict','Verdict_Text']
 law_keys = ['wetboek','bwnummer','artikel','lid']
 
+print(len(selected_keys))
+print(len(verdict_keys))
+
 wetboek_conversion = {}
 
 with open('wetten.txt', 'r') as f:
@@ -153,7 +156,7 @@ def results_to_csvs(results, collection=True, ECLI=True, law_references=True):
         #lr_pd.to_csv("law_references.csv", index=None)
 
     if collection:
-        doc_columns = selected_keys.extend(verdict_keys)
+        doc_columns = selected_keys+verdict_keys
         documents_pd = pd.DataFrame(data=documents_db, columns=doc_columns)
 
     return references_pd, lr_pd, documents_pd
@@ -215,7 +218,7 @@ def main():
     lr_pd = pd.DataFrame(columns=['ID','wetboek','bwnummer','artikel','lid'])
     lr_pd.to_csv('law_references.csv', index=False)"""
 
-    doc_columns = selected_keys.extend(verdict_keys)
+    doc_columns = selected_keys+verdict_keys
     documents_pd = pd.DataFrame(columns=doc_columns)
     documents_pd.to_csv('documents.csv', index=False)
 

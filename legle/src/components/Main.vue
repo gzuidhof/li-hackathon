@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
     <div class="red-top-bar" :style="{opacity: showRedBackground ? '0': '1.0'}"></div>
-    <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo" :isTitle="isTitle" :query="query"></graph-view>
+    <graph-view class="abs fs" :searchOpts="searchOpts" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo" :isTitle="isTitle" :query="query"></graph-view>
     <widget :onQuery="onQuery" :widgetVisible="widgetVisible" :widgetInfo="widgetInfo"></widget>
     <options :isOnBackground="showRedBackground" :onOptsChange="onOptsChange"></options>
     <span class="footer-text" :style="{color: showRedBackground ? '#f3f3f3' : '#343434'}">leegle ✦ <span style="opacity: 0.8; font-style: italic">niet zoeken maar ontdekken</span> </span>
@@ -38,7 +38,8 @@ export default {
       searchOpts: {
         mode: 'referenties', //or 'clicks'
         depth: 1,
-      }
+      },
+      lastQuery: "",
     }
   },
   methods: {
@@ -57,10 +58,15 @@ export default {
         .then((response) => response.json());
     },
     onOptsChange(opts) {
+      var changedMode = opts.mode != this.searchOpts.mode;
       this.searchOpts = opts;
+
+      if (changedMode) {
+        this.onQuery(this.lastQuery);
+      }
     },
     onQuery(query) {
-
+      this.lastQuery = query
       if (query === '') {
         this.showRedBackground = true;
         this.widgetVisible = false;

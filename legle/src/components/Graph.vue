@@ -33,13 +33,51 @@ const COLORS = [
     '#7caaef',
     '#4b8ced',
     '#2c5ba3',
-]
+];
 
 const SOURCES = ['Rechtspraak.nl', 'Ove', 'Xpe', 'wet', 'Ken', 'Lok', 'Pra', 'Mem', 'FD', 'Eur',
     'Rij', 'Pen', 'Soc', 'Bel', 'Ten', 'ACM', 'VN', 'Mod', 'Ond', 'Arb', 'NTF', 'Kor', 'De ', 'Lex',
     'Tax', 'RVD', 'Int', 'Mon', 'Tuc', 'Han', 'IEL', 'KiF', 'Dir', 'Fis', 'Zor', 'NJB', 'Cen', 'BRA',
     'NJF', 'Raa', 'Com', 'BNB', 'IE-', 'Prg', 'Ope', 'Mil', 'Blo', 'NJ', 'NDF', 'Zak', 'EPO', 'NZa',
-    'SC', 'Reg', 'FED', 'RFR', 'JAR', 'WFR', 'EHR']
+    'SC', 'Reg', 'FED', 'RFR', 'JAR', 'WFR', 'EHR'];
+
+const INSTANCE_MAP = {
+    '0': '',
+    '1': 'Gerechtshof',
+    '2': 'Hoge Raad',
+};
+
+
+const options = {
+    nodes: {
+        color: '#e00',
+        font: {
+            color: '#eee',
+        },
+        shape: 'ellipse',
+        mass : 3
+    },
+    edges: {
+        length : 250,
+        arrows: {
+            to:     {enabled: true, scaleFactor:1}
+        },
+    },
+    layout: {
+        randomSeed : 420
+    },
+    physics: {
+        enabled: true,
+        barnesHut: {
+        gravitationalConstant: -2000,
+        centralGravity: 0.3,
+        springLength: 95,
+        springConstant: 0.04,
+        damping: 0.09,
+        avoidOverlap: 0
+        }
+    }
+};
 
 export default {
     name: 'main',
@@ -49,10 +87,18 @@ export default {
         'setWidgetInfo', //Node info that is currently shown in the widget to the left,
         'isTitle',
         'query',
+        'searchOpts',
     ],
     watch: {
         graph: function(g) {
             let { nodes, edges } = g;
+            if (this.searchOpts.mode == 'clicks') {
+                console.log('filtering edges');
+                edges = filterEdges(edges);
+                options['edges']['arrows']['to']['enabled'] = false;
+            } else {
+                options['edges']['arrows']['to']['enabled'] = true;
+            }
 
             if (!this.network) {
                 const options = {
@@ -73,7 +119,14 @@ export default {
                             maxVisible: 30,
                             drawThreshold: 5
                           },
-                        }
+                        },
+                        chosen: { //Does not work.
+                            node :function(values, id, selected, hovering) {
+                                console.log("Chosen change")
+                                values.physics = false;
+                                values.node.size = 50;
+                            }
+                        },
                     },
                     edges: {
                         length : 250,
@@ -94,6 +147,9 @@ export default {
                         damping: 0.09,
                         avoidOverlap: 0
                       }
+                    },
+                    interaction: {
+                        hover: true
                     }
                 };
 
@@ -123,6 +179,10 @@ export default {
                         if (n.id == id) {
                             console.log("SELECTED", n);
 
+                            // Doesn't work ffs
+                            n.size = 500;
+                            n.physics = false;
+
                             var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
                             var d = Date(n.Timestamp);
                             d = d.split(' ')
@@ -131,18 +191,24 @@ export default {
                             d.pop();
                             d = d.join(' ');
                             if(n.Sources){
-                              this.setWidgetInfo({
-                                  summary: n.Summary,
-                                  fields: {
+                              console.log(n);
+                              const fields = {
                                       "ID": n.SearchNumber,
                                       "Bron": n.Sources[0],
                                       "Datum": d,
                                       "Categorie": n.LawArea[0],
                                       "Nummer": pubNumber,
-                                  },
+                             };
+                             if (n.InstanceType != "0") {
+                                 fields['Instantie'] = INSTANCE_MAP[n.InstanceType];
+                             }
+                              this.setWidgetInfo({
+                                  summary: n.Summary,
+                                  fields,
                                   id: n.id,
                                   liSearchQuery: n.liSearchQuery,
-                                  isWetBook: false
+                                  isWetBook: false,
+                                  verdict: shortenString(n.VerdictText, 140),
                               });
                             }
                             else {
@@ -192,6 +258,7 @@ export default {
             };
 
             this.network.setData(data);
+            this.network.setOptions(options);
         }
     },
 
@@ -199,6 +266,14 @@ export default {
         expandNode: function() {
             this.query(this.selected).then((response) => {
                 console.log(response);
+                if (this.searchOpts.mode == 'clicks') {
+                    console.log('filtering edges');
+                    response.references = filterEdges(response.references);
+                    options['edges']['arrows']['to']['enabled'] = false;
+                } else {
+                    options['edges']['arrows']['to']['enabled'] = true;
+                }
+                this.network.setOptions(options);
                 this.stylizeGraph(response.docs, response.references);
                 for (let doc of response.docs) {
                     try {
@@ -229,6 +304,9 @@ export default {
             for (var i = 0; i < nodes.length; i++) {
                 var color = '#d6e6ff';
                 var fontColor = '#EEE';
+
+                nodes[i]['node'] = {title: nodes[i].Title}
+                nodes[i]['title'] = nodes[i].Title; //Doesn't actually work
 
                 if(nodes[i].Sources) {
                   var src = nodes[i].Sources[0];
@@ -323,12 +401,30 @@ function chunkSubstr(str, size) {
   return chunks;
 }
 
+function filterEdges(edges) {
+    const result = [];
+    const added = {};
+    for (let edge of edges) {
+        let s = edge.from.toString() + edge.to.toString();
+        let r = edge.to.toString() + edge.from.toString();
+        if (added[s] || added [r]) {
+            continue;
+        }
+        added[s] = true;
+        result.push(edge);
+    }
+    return result;
+}
+
 function splitValue(value, index) {
     return value.substring(0, index) + " " + value.substring(index);
 }
 
 function shortenString(string, maxLength) {
-  return string.substring(0, maxLength) + '...'
+  if (!string) {
+      return;
+  }
+  return string.substring(0, maxLength) + '...';
 }
 
 function capitalizeFirstLetter(string) {
