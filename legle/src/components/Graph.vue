@@ -109,6 +109,17 @@ export default {
                         },
                         shape: 'ellipse',
                         mass : 3,
+                        scaling : {
+                          min : 10,
+                          max : 100,
+                          label: {
+                            enabled: true,
+                            min: 14,
+                            max: 30,
+                            maxVisible: 30,
+                            drawThreshold: 5
+                          },
+                        },
                         chosen: { //Does not work.
                             node :function(values, id, selected, hovering) {
                                 console.log("Chosen change")
@@ -173,13 +184,18 @@ export default {
                             n.node.physics = false;
 
                             var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
-
+                            var d = Date(n.Timestamp);
+                            d = d.split(' ')
+                            d.pop();
+                            d.pop();
+                            d.pop();
+                            d = d.join(' ');
                             if(n.Sources){
                               console.log(n);
                               const fields = {
                                       "ID": n.SearchNumber,
                                       "Bron": n.Sources[0],
-                                      "Datum": Date(n.Timestamp),
+                                      "Datum": d,
                                       "Categorie": n.LawArea[0],
                                       "Nummer": pubNumber,
                              };
@@ -353,12 +369,13 @@ export default {
                 if(nodes[i].Law){
                   nodes[i]['shape'] = 'box';
                 }
-                console.log(nodes[i])
+                nodes[i]['value'] = 100000*nodes[i]['PageRank'];
+                console.log(nodes[i]);
                 console.log(label);
             }
             for(var i = 0; i < edges.length; i++){
                 let count = edges[i].count;
-                edges[i]['value'] = count*2;
+                edges[i]['value'] = count;
             }
 
         },
