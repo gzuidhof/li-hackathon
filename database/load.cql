@@ -13,7 +13,11 @@ CREATE (:Document {
     Title: doc.Title_Text,
     Timestamp: toInteger(doc.timestamp),
     SearchNumber: doc.SearchNumber,
-    PublicationNumber: doc.PublicationNumber
+    PublicationNumber: doc.PublicationNumber,
+    PageRank: doc.pagerank,
+    Verdict: doc.Verdict,
+    InstanceType: doc.InstanceType,
+    VerdictText: doc.Verdict_Text
 });
 RETURN "Documents created";
 
@@ -47,8 +51,7 @@ USING PERIODIC COMMIT 10000
 LOAD CSV WITH HEADERS FROM "file:///clicks.csv" AS click
 MATCH (doc1:Document {id: toInteger(click.ID)})
 MATCH (doc2:Document {id: toInteger(click.OtherID)})
-CREATE (doc1)-[c1:ALSO_VIEWED {Count: toInteger(click.Count)}]->(doc2)
-CREATE (doc1)<-[c2:ALSO_VIEWED {Count: toInteger(click.Count)}]-(doc2);
+CREATE (doc1)-[c1:ALSO_VIEWED {Count: toInteger(click.Count)}]->(doc2);
 RETURN "Clicks created";
 
 CREATE INDEX ON :Document(SearchNumber);
