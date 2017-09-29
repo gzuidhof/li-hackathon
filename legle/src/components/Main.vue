@@ -47,7 +47,7 @@ export default {
       }
     },
     query(id) {
-      return fetch(`http://localhost:5000/document?id=${id}`)
+      return fetch(`http://4dbd57ae.ngrok.io/document?id=${id}`)
         .then((response) => response.json());
     },
     onQuery(query) {
@@ -60,7 +60,7 @@ export default {
       }
       console.log(Widget.data(), query);
 
-      fetch(`http://localhost:5000/document?ecli=${query}`)
+      fetch(`http://4dbd57ae.ngrok.io/document?ecli=${query}`)
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
