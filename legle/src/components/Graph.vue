@@ -200,6 +200,10 @@ export default {
 
         stylizeGraph: function(nodes, edges) {
             for (var i = 0; i < nodes.length; i++) {
+                if (!nodes[i].Sources) {
+                    continue;
+                }
+                var src = nodes[i].Sources[0];
                 var color = '#d6e6ff';
                 var fontColor = '#EEE';
 
@@ -256,8 +260,6 @@ export default {
                 if(nodes[i].Law){
                   nodes[i]['shape'] = 'box';
                 }
-                console.log(nodes[i])
-                console.log(label);
             }
             for(var i = 0; i < edges.length; i++){
                 let count = edges[i].count;
