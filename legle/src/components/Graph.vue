@@ -41,6 +41,12 @@ const SOURCES = ['Rechtspraak.nl', 'Ove', 'Xpe', 'wet', 'Ken', 'Lok', 'Pra', 'Me
     'NJF', 'Raa', 'Com', 'BNB', 'IE-', 'Prg', 'Ope', 'Mil', 'Blo', 'NJ', 'NDF', 'Zak', 'EPO', 'NZa',
     'SC', 'Reg', 'FED', 'RFR', 'JAR', 'WFR', 'EHR'];
 
+const INSTANCE_MAP = {
+    '0': '',
+    '1': 'Gerechtshof',
+    '2': 'Hoge Raad',
+};
+
 
 const options = {
     nodes: {
@@ -169,18 +175,24 @@ export default {
                             var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
 
                             if(n.Sources){
-                              this.setWidgetInfo({
-                                  summary: n.Summary,
-                                  fields: {
+                              console.log(n);
+                              const fields = {
                                       "ID": n.SearchNumber,
                                       "Bron": n.Sources[0],
                                       "Datum": Date(n.Timestamp),
                                       "Categorie": n.LawArea[0],
                                       "Nummer": pubNumber,
-                                  },
+                             };
+                             if (n.InstanceType != "0") {
+                                 fields['Instantie'] = INSTANCE_MAP[n.InstanceType];
+                             }
+                              this.setWidgetInfo({
+                                  summary: n.Summary,
+                                  fields,
                                   id: n.id,
                                   liSearchQuery: n.liSearchQuery,
-                                  isWetBook: false
+                                  isWetBook: false,
+                                  verdict: shortenString(n.VerdictText, 140),
                               });
                             }
                             else {
@@ -392,7 +404,10 @@ function splitValue(value, index) {
 }
 
 function shortenString(string, maxLength) {
-  return string.substring(0, maxLength) + '...'
+  if (!string) {
+      return;
+  }
+  return string.substring(0, maxLength) + '...';
 }
 
 function capitalizeFirstLetter(string) {

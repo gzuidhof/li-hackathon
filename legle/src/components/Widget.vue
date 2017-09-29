@@ -30,6 +30,11 @@
             <h4 style="margin-top: -12px; margin-bottom: 6px;">Samenvatting</h4>
             <p class="summary">{{widgetInfo.summary}}</p>
         </div>
+        
+        <div v-if="widgetInfo.verdict" class="widget-content">
+            <h4 style="margin-top: -12px; margin-bottom: 6px;">Conclusie</h4>
+            <p class="summary">{{widgetInfo.verdict}}</p>
+        </div>
 
         <div class="li-button-wrapper" :href="widgetInfo.id">
             <a target='_blank' :href="leftLink">
