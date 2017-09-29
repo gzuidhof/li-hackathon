@@ -129,7 +129,7 @@ export default {
                         },
                     },
                     edges: {
-                        length : 250,
+                        length : 350,
                         arrows: {
                           to:     {enabled: true, scaleFactor:1}
                         },
