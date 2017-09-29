@@ -374,7 +374,10 @@ export default {
                 }
                 nodes[i]['value'] = 100000*nodes[i]['PageRank'];
                 if(nodes[i].Law) {
-                    nodes[i]['value'] = 3.25;
+                    nodes[i]['value'] = 3.0;
+                }
+                if (isNaN(nodes[i]['value'])) {
+                    nodes[i]['value'] = 1.5;
                 }
                 console.log(nodes[i]);
                 console.log(label);
