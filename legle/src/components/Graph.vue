@@ -33,13 +33,45 @@ const COLORS = [
     '#7caaef',
     '#4b8ced',
     '#2c5ba3',
-]
+];
 
 const SOURCES = ['Rechtspraak.nl', 'Ove', 'Xpe', 'wet', 'Ken', 'Lok', 'Pra', 'Mem', 'FD', 'Eur',
     'Rij', 'Pen', 'Soc', 'Bel', 'Ten', 'ACM', 'VN', 'Mod', 'Ond', 'Arb', 'NTF', 'Kor', 'De ', 'Lex',
     'Tax', 'RVD', 'Int', 'Mon', 'Tuc', 'Han', 'IEL', 'KiF', 'Dir', 'Fis', 'Zor', 'NJB', 'Cen', 'BRA',
     'NJF', 'Raa', 'Com', 'BNB', 'IE-', 'Prg', 'Ope', 'Mil', 'Blo', 'NJ', 'NDF', 'Zak', 'EPO', 'NZa',
-    'SC', 'Reg', 'FED', 'RFR', 'JAR', 'WFR', 'EHR']
+    'SC', 'Reg', 'FED', 'RFR', 'JAR', 'WFR', 'EHR'];
+
+
+const options = {
+    nodes: {
+        color: '#e00',
+        font: {
+            color: '#eee',
+        },
+        shape: 'ellipse',
+        mass : 3
+    },
+    edges: {
+        length : 250,
+        arrows: {
+            to:     {enabled: true, scaleFactor:1}
+        },
+    },
+    layout: {
+        randomSeed : 420
+    },
+    physics: {
+        enabled: true,
+        barnesHut: {
+        gravitationalConstant: -2000,
+        centralGravity: 0.3,
+        springLength: 95,
+        springConstant: 0.04,
+        damping: 0.09,
+        avoidOverlap: 0
+        }
+    }
+};
 
 export default {
     name: 'main',
@@ -49,10 +81,18 @@ export default {
         'setWidgetInfo', //Node info that is currently shown in the widget to the left,
         'isTitle',
         'query',
+        'searchOpts',
     ],
     watch: {
         graph: function(g) {
             let { nodes, edges } = g;
+            if (this.searchOpts.mode == 'clicks') {
+                console.log('filtering edges');
+                edges = filterEdges(edges);
+                options['edges']['arrows']['to']['enabled'] = false;
+            } else {
+                options['edges']['arrows']['to']['enabled'] = true;
+            }
 
             if (!this.network) {
                 const options = {
@@ -190,12 +230,22 @@ export default {
             };
 
             this.network.setData(data);
+            this.network.setOptions(options);
         }
     },
 
     methods: {
         expandNode: function() {
             this.query(this.selected).then((response) => {
+                console.log(response);
+                if (this.searchOpts.mode == 'clicks') {
+                    console.log('filtering edges');
+                    response.references = filterEdges(response.references);
+                    options['edges']['arrows']['to']['enabled'] = false;
+                } else {
+                    options['edges']['arrows']['to']['enabled'] = true;
+                }
+                this.network.setOptions(options);
                 this.stylizeGraph(response.docs, response.references);
                 for (let doc of response.docs) {
                     try {
@@ -320,6 +370,21 @@ function chunkSubstr(str, size) {
   }
 
   return chunks;
+}
+
+function filterEdges(edges) {
+    const result = [];
+    const added = {};
+    for (let edge of edges) {
+        let s = edge.from.toString() + edge.to.toString();
+        let r = edge.to.toString() + edge.from.toString();
+        if (added[s] || added [r]) {
+            continue;
+        }
+        added[s] = true;
+        result.push(edge);
+    }
+    return result;
 }
 
 function splitValue(value, index) {
