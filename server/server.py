@@ -34,7 +34,6 @@ def document():
         for doc in record['nodes']:
             doc_id = doc.id
             if 'id' not in doc:
-                print('fix id')
                 id = hash(doc_id)
             else:
                 id = doc['id']
@@ -46,8 +45,9 @@ def document():
     
     found_refs = set()
     for ref in refs:
-        if ref.id not in found_refs:
-            found_refs.add(ref.id)
+        ref_id = str(ref.start)+str(ref.end)
+        if ref_id not in found_refs:
+            found_refs.add(ref_id)
             references.append({
                 'from': neo4j_id_to_doc_id[ref.start],
                 'to': neo4j_id_to_doc_id[ref.end],

@@ -79,7 +79,10 @@ export default {
     rightLink() {
         if(!this.widgetInfo) return;
         if (this.widgetInfo.isWetBook) {
-            return 'http://www.maxius.nl' + this.widgetInfo.link;
+            var query = this.widgetInfo.link;
+            query = query.replace(/-/g, ' ');
+            query = query.replace(/\//g, ' ');
+            return 'https://www.legalintelligence.com/SearchResults?q=' + query;
         }
         else {
             return 'https://www.legalintelligence.com/SearchResults?q=' + this.widgetInfo.liSearchQuery;
