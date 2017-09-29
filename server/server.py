@@ -33,9 +33,14 @@ def document():
     for record in result:
         for doc in record['nodes']:
             doc_id = doc.id
+            if 'id' not in doc:
+                print('fix id')
+                id = hash(doc_id)
+            else:
+                id = doc['id']
             if doc_id not in neo4j_id_to_doc_id:
-                neo4j_id_to_doc_id[doc.id] = doc['id']
-                docs.append(dict(doc))
+                neo4j_id_to_doc_id[doc.id] = id
+                docs.append(dict(doc, id=id))
         for ref in record['r']:
             refs.append(ref)
     
@@ -46,7 +51,7 @@ def document():
             references.append({
                 'from': neo4j_id_to_doc_id[ref.start],
                 'to': neo4j_id_to_doc_id[ref.end],
-                'count': ref['Count'],
+                'count': ref.get('Count'),
             })
 
     return jsonify({
