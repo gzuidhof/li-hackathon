@@ -9,12 +9,14 @@ docs_to_users = {}
 NUM_DOCS = 50000
 docs = []
 
+NUM_LD = 30000     # How many docs from Legal_Data ?
+NUM_RVDR = 90000   # How many docs from RvdR ?
 
-def build_databases(solr_docs, solr_clicks):
-    doc_ids = solr_docs.search("*:*", rows=50000, fl='ID')
+ROWS_PER_QUERY = 1000
 
+def build_databases(doc_ids, solr_clicks):
     # Get the document IDs in the collection
-    for doc_id_json in tqdm.tqdm(doc_ids):
+    for doc_id_json in doc_ids:
         doc_id = doc_id_json['ID']
 
         # For every doc, find the users that clicked on the document
@@ -38,11 +40,21 @@ def build_databases(solr_docs, solr_clicks):
 def main():
     solr_docs = pysolr.Solr('http://localhost:8983/solr/Legal_Data')
     solr_clicks = pysolr.Solr('http://localhost:8983/solr/LILog')
+    solr_rvdr = pysolr.Solr('http://localhost:8983/solr/RvdR_Data')
 
-    build_databases(solr_docs, solr_clicks)
+    print("Querying Legal_Data\n")
+    for i in tqdm.tqdm(range(int(NUM_LD / ROWS_PER_QUERY))):
+        results = solr_docs.search("LawArea:\"Burgerlijk recht\" AND NOT Source:Rechtspraak.nl",
+                                 start=i * ROWS_PER_QUERY, rows=ROWS_PER_QUERY, fl='ID')
+        build_databases(results, solr_clicks)
+    print("Querying RvdR_Data\n")
+    for i in tqdm.tqdm(range(int(NUM_RVDR / ROWS_PER_QUERY))):
+        results = solr_rvdr.search("LawArea:\"Burgerlijk recht\"", start=i * ROWS_PER_QUERY, rows=ROWS_PER_QUERY, fl='ID')
+        build_databases(results, solr_clicks)
 
     clicks = []
-
+    print(len(docs))
+    return
     for i, doc_a in tqdm.tqdm(enumerate(docs)):
         for j, doc_b in enumerate(docs[i+1:]):
             assert doc_a != doc_b

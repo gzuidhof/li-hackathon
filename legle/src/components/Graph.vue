@@ -9,7 +9,7 @@
                 <p>A tool for visualizing the connections between law documents by Legle</p>
             </div>
         </div>
-        <div class="center-greeting animated fadeIn" :class="(showRedBackground ? '':'hide ') + (isTitle ? '':'no-title')">{{isTitle? 'legle':'geen resultaten'}}</div>
+        <div class="center-greeting animated fadeIn" :class="(showRedBackground ? '':'hide ') + (isTitle ? '':'no-title')">{{isTitle? 'leegle':'geen resultaten'}}</div>
     </div>
 </template>
 
@@ -126,6 +126,7 @@ export default {
                                   },
                                   id: n.id,
                                   liSearchQuery: n.liSearchQuery,
+                                  isWetBook: false
                               });
                             }
                             else{
@@ -245,7 +246,12 @@ export default {
                     else {
                       nodes[i].liSearchQuery = 'law2';
                     }
-                    label = chunkSubstr(shortenString(nodes[i].SearchNumber, 57), 20).join('\n');
+                    if(!nodes[i].Law){
+                        label = chunkSubstr(shortenString(nodes[i].SearchNumber, 57), 20).join('\n');
+                    }
+                    else{
+                      label = chunkSubstr(nodes[i].SearchNumber, 20).join('\n');
+                    }
                 } else {
                     nodes[i].liSearchQuery = nodes[i].PublicationNumber;
                     label = '\n' + nodes[i].SearchNumber + '\n';

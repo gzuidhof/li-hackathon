@@ -4,7 +4,7 @@
     <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo" :isTitle="isTitle" :query="query"></graph-view>
     <widget :onQuery="onQuery" :widgetVisible="widgetVisible" :widgetInfo="widgetInfo"></widget>
     <options :isOnBackground="showRedBackground"></options>
-    <span class="footer-text" :style="{color: showRedBackground ? '#f3f3f3' : '#343434'}">Legle ✦ <span style="opacity: 0.8; font-style: italic">niet zoeken maar ontdekken</span> </span>
+    <span class="footer-text" :style="{color: showRedBackground ? '#f3f3f3' : '#343434'}">Leegle ✦ <span style="opacity: 0.8; font-style: italic">niet zoeken maar ontdekken</span> </span>
   </div>
 </template>
 
@@ -32,6 +32,7 @@ export default {
       },
       widgetVisible: false,
       isTitle: true,
+      isWetBook: false,
     }
   },
   methods: {
