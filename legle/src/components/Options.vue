@@ -9,8 +9,8 @@
             :class="(isOnBackground?'background-text':'non-background-text')
             + ' ' + (drawerOpen ? '': 'zoomOutRight')">
 
-            <span @click="onMode('referenties')" class="opt opt-large" :class="mode=='referenties'?'selected':''">referenties</span>
             <span @click="onMode('clicks')" class="opt opt-large" :class="mode=='clicks'?'selected':''">clicks</span>
+            <span @click="onMode('referenties')" class="opt opt-large" :class="mode=='referenties'?'selected':''">referenties</span>
             <span class="fa fa-share-alt opt-icon" style="margin-right: -6px; margin-left: 4px;"></span>
             <br>
             <span @click="onDepth(i-1)" v-for="i in 4" class="opt" :class="depth==i-1?'selected':''">{{i-1}} </span>
@@ -22,24 +22,33 @@
 <script>
 export default {
     props: [
-        'isOnBackground'
+        'isOnBackground',
+        'onOptsChange'
     ],
     data() {
         return {
-            drawerOpen: true,
+            drawerOpen: false,
             depth: 1,
-            mode: 'clicks'
+            mode: 'referenties'
         }
     },
     methods: {
         onDepth(depth) {
             this.depth = depth;
+            this.sendNewOpts();
         },
         onMode(mode) {
             this.mode = mode;
+            this.sendNewOpts();
         },
         toggleDrawer() {
             this.drawerOpen = !this.drawerOpen;
+        },
+        sendNewOpts() {
+            this.onOptsChange({
+                mode: this.mode,
+                depth: this.depth
+            });
         }
     }
 }
@@ -63,6 +72,19 @@ export default {
     opacity: 0.5;
 }
 
+
+.non-background-text.options-button {
+    color: #fff;
+}
+
+.non-background-text.tada {
+    color: #555;
+}
+
+.background-text.tada {
+    opacity: 0.725;
+}
+
 .options-button:hover {
     opacity: 0.725;
     transform: scale(1.08);
@@ -77,13 +99,13 @@ export default {
 }
 
 .non-background-text {
-    color: #fff;
+    color: #333;
     opacity: 1;
 }
 
 .non-background-text:hover {
     opacity: 1;
-    color: #fafafa;
+    color: #444;
 }
 
 .options-drawer {

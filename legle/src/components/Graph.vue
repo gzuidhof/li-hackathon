@@ -4,7 +4,7 @@
         <!-- Will hold the network -->
         <div id="container" class="fullscreen">
             <!-- Welcome message -->
-            <div id="info">
+            <div id="info" style="display: none">
                 <h1>Law Map</h1>
                 <p>A tool for visualizing the connections between law documents by Legle</p>
             </div>
