@@ -38,7 +38,8 @@ export default {
       searchOpts: {
         mode: 'referenties', //or 'clicks'
         depth: 1,
-      }
+      },
+      lastQuery: "",
     }
   },
   methods: {
@@ -57,10 +58,15 @@ export default {
         .then((response) => response.json());
     },
     onOptsChange(opts) {
+      var changedMode = opts.mode != this.searchOpts.mode;
       this.searchOpts = opts;
+
+      if (changedMode) {
+        this.onQuery(this.lastQuery);
+      }
     },
     onQuery(query) {
-
+      this.lastQuery = query
       if (query === '') {
         this.showRedBackground = true;
         this.widgetVisible = false;
