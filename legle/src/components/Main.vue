@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
     <div class="red-top-bar" :style="{opacity: showRedBackground ? '0': '1.0'}"></div>
-    <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo" :isTitle="isTitle" :query="query"></graph-view>
+    <graph-view class="abs fs" :searchOpts="searchOpts" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo" :isTitle="isTitle" :query="query"></graph-view>
     <widget :onQuery="onQuery" :widgetVisible="widgetVisible" :widgetInfo="widgetInfo"></widget>
     <options :isOnBackground="showRedBackground" :onOptsChange="onOptsChange"></options>
     <span class="footer-text" :style="{color: showRedBackground ? '#f3f3f3' : '#343434'}">leegle ✦ <span style="opacity: 0.8; font-style: italic">niet zoeken maar ontdekken</span> </span>
@@ -13,7 +13,7 @@ import Graph from './Graph.vue'
 import Widget from './Widget.vue'
 import Options from './Options.vue'
 
-const SERVER_URL = 'http://4dbd57ae.ngrok.io'
+const SERVER_URL = 'http://localhost:5000'
 
 export default {
   components: {
