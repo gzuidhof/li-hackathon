@@ -1,12 +1,18 @@
 <template>
     <div class="options-container abs animated fadeIn">
-        <div @click="toggleDrawer" class="options-button" :class="isOnBackground?'background-text':'non-background-text'">
+        <div @click="toggleDrawer" class="options-button animated"
+            :class="(isOnBackground?'background-text ':'non-background-text ') + (drawerOpen?'tada':'wobble')">
             <span class="fa fa-bars"></span>
         </div>
 
         <div class="options-drawer animated fadeInRight"
             :class="(isOnBackground?'background-text':'non-background-text')
             + ' ' + (drawerOpen ? '': 'zoomOutRight')">
+
+            <span @click="onMode('referenties')" class="opt opt-large" :class="mode=='referenties'?'selected':''">referenties</span>
+            <span @click="onMode('clicks')" class="opt opt-large" :class="mode=='clicks'?'selected':''">clicks</span>
+            <span class="fa fa-share-alt opt-icon" style="margin-right: -6px; margin-left: 4px;"></span>
+            <br>
             <span @click="onDepth(i-1)" v-for="i in 4" class="opt" :class="depth==i-1?'selected':''">{{i-1}} </span>
             <span class="fa fa-sort-amount-asc opt-icon"></span>
         </div>
@@ -22,11 +28,15 @@ export default {
         return {
             drawerOpen: true,
             depth: 1,
+            mode: 'clicks'
         }
     },
     methods: {
         onDepth(depth) {
             this.depth = depth;
+        },
+        onMode(mode) {
+            this.mode = mode;
         },
         toggleDrawer() {
             this.drawerOpen = !this.drawerOpen;
@@ -81,6 +91,7 @@ export default {
     right: 45px;
     top: 74px;
     position: absolute;
+    text-align: end;
 }
 
 .options-drawer span {
@@ -95,6 +106,10 @@ export default {
     cursor: pointer;
     opacity: 0.75;
     transition: all ease-in-out 125ms;
+}
+
+.opt-large {
+    font-size: 1.4em !important;
 }
 
 .opt:hover {

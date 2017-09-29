@@ -101,7 +101,7 @@ export default {
 }
 
 .footer-text {
-  opacity: 0.65;
+  opacity: 0.7;
   color: #343434;
   position: absolute;
   bottom: 6px;
@@ -116,6 +116,7 @@ export default {
 
 .footer-text:hover {
   transform: translateX(-40px);
+  opacity: 0.8;
 }
 
 h1, h2 {
