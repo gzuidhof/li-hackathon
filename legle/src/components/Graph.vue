@@ -129,11 +129,22 @@ export default {
                                   isWetBook: false
                               });
                             }
-                            else{
+                            else {
+                              var fullink = n.Link.split('/');
+                              var len = fullink.length;
+                              var article = fullink.pop() || fullink.pop();
+                              if(len == 4){
+                                  article = fullink.pop();
+                              }
+                              article = capitalizeFirstLetter(article);
+                              var firstDigit = article.match(/\d/);
+                              var indexed = article.indexOf(firstDigit);
+                              article = splitValue(article, indexed);
                               this.setWidgetInfo({
                                   summary: n.Text,
                                   fields: {
-                                      "Wet": n.SearchNumber
+                                      "Wetboek" : n.SearchNumber,
+                                      "Artikel" : article
                                   },
                                   link : n.Link,
                                   isWetBook: true
@@ -295,8 +306,16 @@ function chunkSubstr(str, size) {
   return chunks;
 }
 
+function splitValue(value, index) {
+    return value.substring(0, index) + " " + value.substring(index);
+}
+
 function shortenString(string, maxLength) {
   return string.substring(0, maxLength) + '...'
+}
+
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 </script>
 
