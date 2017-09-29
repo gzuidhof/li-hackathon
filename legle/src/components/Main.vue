@@ -1,10 +1,10 @@
 <template>
   <div class="main-container">
     <div class="red-top-bar" :style="{opacity: showRedBackground ? '0': '1.0'}"></div>
-    <graph-view class="abs fs" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo" :isTitle="isTitle" :query="query"></graph-view>
+    <graph-view class="abs fs" :searchOpts="searchOpts" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo" :isTitle="isTitle" :query="query"></graph-view>
     <widget :onQuery="onQuery" :widgetVisible="widgetVisible" :widgetInfo="widgetInfo"></widget>
-    <options :isOnBackground="showRedBackground"></options>
-    <span class="footer-text" :style="{color: showRedBackground ? '#f3f3f3' : '#343434'}">Leegle ✦ <span style="opacity: 0.8; font-style: italic">niet zoeken maar ontdekken</span> </span>
+    <options :isOnBackground="showRedBackground" :onOptsChange="onOptsChange"></options>
+    <span class="footer-text" :style="{color: showRedBackground ? '#f3f3f3' : '#343434'}">leegle ✦ <span style="opacity: 0.8; font-style: italic">niet zoeken maar ontdekken</span> </span>
   </div>
 </template>
 
@@ -12,6 +12,8 @@
 import Graph from './Graph.vue'
 import Widget from './Widget.vue'
 import Options from './Options.vue'
+
+const SERVER_URL = 'http://localhost:5000'
 
 export default {
   components: {
@@ -33,6 +35,10 @@ export default {
       widgetVisible: false,
       isTitle: true,
       isWetBook: false,
+      searchOpts: {
+        mode: 'referenties', //or 'clicks'
+        depth: 1,
+      }
     }
   },
   methods: {
@@ -47,8 +53,11 @@ export default {
       }
     },
     query(id) {
-      return fetch(`http://4dbd57ae.ngrok.io/document?id=${id}`)
+      return fetch(`${SERVER_URL}/document?id=${id}&depth=${this.searchOpts.depth}&mode=${this.searchOpts.mode}`)
         .then((response) => response.json());
+    },
+    onOptsChange(opts) {
+      this.searchOpts = opts;
     },
     onQuery(query) {
 
@@ -58,11 +67,12 @@ export default {
         this.isTitle = true;
         return;
       }
-      console.log(Widget.data(), query);
+      console.log(Widget.data(), query, this.searchOpts);
 
-      fetch(`http://4dbd57ae.ngrok.io/document?ecli=${query}`)
+      fetch(`${SERVER_URL}/document?ecli=${query}&depth=${this.searchOpts.depth}&mode=${this.searchOpts.mode}`)
         .then((response) => response.json())
         .then((data) => {
+          console.log(data);
           this.graph = {
             nodes: data.docs,
             edges: data.references,
@@ -70,7 +80,7 @@ export default {
           this.showRedBackground = false;
           if (this.graph.nodes.length == 0) {
             this.showRedBackground = true;
-            this.isTitle=false;
+            this.isTitle = false;
           }
         });
     }
@@ -98,7 +108,7 @@ export default {
 }
 
 .footer-text {
-  opacity: 0.65;
+  opacity: 0.7;
   color: #343434;
   position: absolute;
   bottom: 6px;
@@ -113,6 +123,7 @@ export default {
 
 .footer-text:hover {
   transform: translateX(-40px);
+  opacity: 0.8;
 }
 
 h1, h2 {
