@@ -62,7 +62,14 @@ export default {
                             color: '#eee',
                         },
                         shape: 'ellipse',
-                        mass : 3
+                        mass : 3,
+                        chosen: { //Does not work.
+                            node :function(values, id, selected, hovering) {
+                                console.log("Chosen change")
+                                values.physics = false;
+                                values.node.size = 50;
+                            }
+                        },
                     },
                     edges: {
                         length : 250,
@@ -83,6 +90,9 @@ export default {
                         damping: 0.09,
                         avoidOverlap: 0
                       }
+                    },
+                    interaction: {
+                        hover: true
                     }
                 };
 
@@ -111,6 +121,10 @@ export default {
                     for (var n of this.nodes) {
                         if (n.id == id) {
                             console.log("SELECTED", n);
+
+                            // Doesn't work ffs
+                            n.size = 500;
+                            n.physics = false;
 
                             var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
 
@@ -182,7 +196,6 @@ export default {
     methods: {
         expandNode: function() {
             this.query(this.selected).then((response) => {
-                console.log(response);
                 this.stylizeGraph(response.docs, response.references);
                 for (let doc of response.docs) {
                     try {
@@ -213,6 +226,9 @@ export default {
             for (var i = 0; i < nodes.length; i++) {
                 var color = '#d6e6ff';
                 var fontColor = '#EEE';
+
+                nodes[i]['node'] = {title: nodes[i].Title}
+                nodes[i]['title'] = nodes[i].Title; //Doesn't actually work
 
                 if(nodes[i].Sources) {
                   var src = nodes[i].Sources[0];

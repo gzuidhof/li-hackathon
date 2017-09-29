@@ -132,7 +132,7 @@ export default {
 }
 
 .widget-main {
-    min-height: 420px;
+    min-height: 480px;
 }
 
 .widget-search {
