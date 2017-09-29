@@ -105,7 +105,7 @@ export default {
 
 .non-background-text:hover {
     opacity: 1;
-    color: #444;
+    color: #666;
 }
 
 .options-drawer {
