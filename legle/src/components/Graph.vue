@@ -202,6 +202,9 @@ export default {
                              if (n.InstanceType != "0") {
                                  fields['Instantie'] = INSTANCE_MAP[n.InstanceType];
                              }
+                             if (n.Verdict === 'True') {
+                                 fields['Vernietigd'] = '';
+                             }
                               this.setWidgetInfo({
                                   summary: n.Summary,
                                   fields,
