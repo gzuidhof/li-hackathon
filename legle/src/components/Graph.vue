@@ -113,7 +113,7 @@ export default {
                           min : 10,
                           max : 100,
                           label: {
-                            enabled: false,
+                            enabled: true,
                             min: 14,
                             max: 30,
                             maxVisible: 30,
@@ -373,6 +373,12 @@ export default {
                   nodes[i]['shape'] = 'box';
                 }
                 nodes[i]['value'] = 100000*nodes[i]['PageRank'];
+                if(nodes[i].Law) {
+                    nodes[i]['value'] = 3.0;
+                }
+                if (isNaN(nodes[i]['value'])) {
+                    nodes[i]['value'] = 1.5;
+                }
                 console.log(nodes[i]);
                 console.log(label);
             }
