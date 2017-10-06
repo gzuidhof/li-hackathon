@@ -7,9 +7,9 @@
 ![](screen_zoom.png)
 
 ## Tech
-**Frontend:** Vue.JS 2, vis.js, animate
-**Backend:** Flask, Neo4J, Solr
-**Data processing and scraping:** pandas, requests, lxml
+**Frontend:** Vue.JS 2, vis.js, animate  
+**Backend:** Flask, Neo4J, Solr  
+**Data processing and scraping:** pandas, requests, lxml  
 
 ## Contributors
 We created this product with a team of 5 who studied or still study Computing Science (*Data Science* specialization) at [Radboud University](https://www.ru.nl), Nijmegen. Our team name was *"From RU with Love"*.
