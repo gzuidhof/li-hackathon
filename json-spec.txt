@@ -1,7 +1,0 @@
-get '/document?ecli=ecli:iasdjida
-returnt {
-    DOCUMENT met ecli nummer
-    connected documents
-    depth: default 2
-}
-
