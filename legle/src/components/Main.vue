@@ -13,7 +13,7 @@ import Graph from './Graph.vue'
 import Widget from './Widget.vue'
 import Options from './Options.vue'
 
-const SERVER_URL = 'http://8d86d3a0.eu.ngrok.io'
+const SERVER_URL = 'http://localhost:5000';
 
 export default {
   components: {

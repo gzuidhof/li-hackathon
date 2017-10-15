@@ -23,6 +23,8 @@ RETURN "Documents created";
 
 CREATE INDEX ON :Document(id);
 CREATE INDEX ON :Document(SearchNumber);
+CALL db.awaitIndex(":Document(id)");
+CALL db.awaitIndex(":Document(SearchNumber)");
 
 USING PERIODIC COMMIT 10000
 LOAD CSV WITH HEADERS FROM "file:///wetboekenteksten.csv" AS law
@@ -33,7 +35,8 @@ CREATE (:Law {
 });
 RETURN "Laws created";
 
-CREATE INDEX ON :Law(link);
+CREATE INDEX ON :Law(Link);
+CALL db.awaitIndex(":Law(Link)");
 
 USING PERIODIC COMMIT 10000
 LOAD CSV WITH HEADERS FROM "file:///references.csv" AS ref
@@ -56,5 +59,3 @@ MATCH (doc1:Document {id: toInteger(click.ID)})
 MATCH (doc2:Document {id: toInteger(click.OtherID)})
 CREATE (doc1)-[c1:ALSO_VIEWED {Count: toInteger(click.Count)}]->(doc2);
 RETURN "Clicks created";
-
-schema await
