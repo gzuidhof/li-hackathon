@@ -33,7 +33,7 @@ CREATE (:Law {
 });
 RETURN "Laws created";
 
-CREATE INDEX ON :Law(link);
+CREATE INDEX ON :Law(Link);
 
 USING PERIODIC COMMIT 10000
 LOAD CSV WITH HEADERS FROM "file:///references.csv" AS ref
