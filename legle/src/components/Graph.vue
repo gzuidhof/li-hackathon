@@ -163,6 +163,21 @@ export default {
                 const container = document.getElementById('container');
                 this.network = new vis.Network(container, { nodes: nodesDataSet, edges: edgesDataSet }, options);
 
+                this.draggedNodeId = null;
+                this.network.on('dragStart', (selection) => {
+                    const id = selection.nodes[0];
+                    if (id) {
+                        this.draggedNodeId = id;
+                        this.nodesDataSet.update({id, fixed: false});
+                    }
+                });
+                this.network.on('dragEnd', () => {
+                    if (this.draggedNodeId) {
+                        this.nodesDataSet.update({id: this.draggedNodeId, fixed: true});
+                        this.draggedNodeId = null;
+                    }
+                });
+
                 this.network.on('selectNode', (selection) => {
                     var id = selection.nodes[0];
                     this.selected = id;
