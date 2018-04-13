@@ -2,9 +2,33 @@ from flask import Flask, request, jsonify
 from werkzeug.exceptions import BadRequest
 from flask_cors import CORS
 from neo4j.v1 import GraphDatabase, basic_auth
+import pysolr
+import pprint
+from solr_parser import SolrParser
+from solr_client import get_documents
 
 app = Flask(__name__)
 CORS(app)
+
+
+@app.route('/solrdocument')
+def solrdocument():
+    ecli = request.args.get('ecli')
+    depth = request.args.get('depth', 2)
+    id = request.args.get('id')
+    mode = request.args.get('mode', 'referenties')
+
+    if ecli is not None:
+        print("Requesting " + ecli)
+    if id is not None:
+        print("Requesting id " + id)
+
+    docs, references = get_documents([ecli])
+
+    return jsonify({
+        'docs': docs,
+        'references': references
+    })
 
 
 @app.route('/document')
@@ -66,14 +90,24 @@ def document():
                 'count': ref.get('Count'),
             })
 
-    return jsonify({
-        'docs': docs,
-        'references': references,
+    res = jsonify({
+        'docs' : docs,
+        'references' : references
     })
+    print("=======DOCUMENTS=======")
+    pprint.pprint(docs[0])
+    print("=======REFERENCES=======")
+    print(references)
+
+    return res
+
 
 if __name__ == '__main__':
-    driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "joris"))
+    driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "timo"))
     session = driver.session()
+
+    solr = pysolr.Solr('http://94.198.25.91:8080/solr/ACC_Legal_Slave', search_handler='/tvrh', results_cls=dict)
+    solr_parser = SolrParser()
 
     app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=True)
 

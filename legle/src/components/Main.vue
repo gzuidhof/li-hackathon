@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
     <div class="red-top-bar" :style="{opacity: showRedBackground ? '0': '1.0'}"></div>
-    <graph-view class="abs fs" :searchOpts="searchOpts" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo" :isTitle="isTitle" :query="query"></graph-view>
+    <graph-view class="abs fs" :searchOpts="searchOpts" :showRedBackground="showRedBackground" :graph="graph" :setWidgetInfo="setWidgetInfo" :isTitle="isTitle" :query="query" :querySN="querySN"></graph-view>
     <widget :onQuery="onQuery" :widgetVisible="widgetVisible" :widgetInfo="widgetInfo"></widget>
     <options :isOnBackground="showRedBackground" :onOptsChange="onOptsChange"></options>
     <span class="footer-text" :style="{color: showRedBackground ? '#f3f3f3' : '#343434'}">leegle ✦ <span style="opacity: 0.8; font-style: italic">niet zoeken maar ontdekken</span> </span>
@@ -54,7 +54,11 @@ export default {
       }
     },
     query(id) {
-      return fetch(`${SERVER_URL}/document?id=${id}&depth=${this.searchOpts.depth}&mode=${this.searchOpts.mode}`)
+      return fetch(`${SERVER_URL}/solrdocument?id=${id}&depth=${this.searchOpts.depth}&mode=${this.searchOpts.mode}`)
+        .then((response) => response.json());
+    },
+    querySN(sn) {
+      return fetch(`${SERVER_URL}/solrdocument?ecli=${sn}&depth=${this.searchOpts.depth}&mode=${this.searchOpts.mode}`)
         .then((response) => response.json());
     },
     onOptsChange(opts) {
@@ -66,7 +70,8 @@ export default {
       }
     },
     onQuery(query) {
-      this.lastQuery = query
+      console.log('onQuery');
+      this.lastQuery = query;
       if (query === '') {
         this.showRedBackground = true;
         this.widgetVisible = false;
@@ -75,7 +80,7 @@ export default {
       }
       console.log(Widget.data(), query, this.searchOpts);
 
-      fetch(`${SERVER_URL}/document?ecli=${query}&depth=${this.searchOpts.depth}&mode=${this.searchOpts.mode}`)
+      fetch(`${SERVER_URL}/solrdocument?ecli=${query}&depth=${this.searchOpts.depth}&mode=${this.searchOpts.mode}`)
         .then((response) => response.json())
         .then((data) => {
           console.log(data);

@@ -58,7 +58,7 @@ const options = {
         mass : 3
     },
     edges: {
-        length : 250,
+        length : 500,
         arrows: {
             to:     {enabled: true, scaleFactor:1}
         },
@@ -69,13 +69,14 @@ const options = {
     physics: {
         enabled: true,
         barnesHut: {
-        gravitationalConstant: -2000,
-        centralGravity: 0.3,
-        springLength: 95,
-        springConstant: 0.04,
-        damping: 0.09,
-        avoidOverlap: 0
-        }
+          gravitationalConstant: -2000,
+          centralGravity: 0.3,
+          springLength: 150,
+          springConstant: 1,
+          damping: 0.09,
+          avoidOverlap: 0
+        },
+        maxVelocity: 5
     }
 };
 
@@ -87,6 +88,7 @@ export default {
         'setWidgetInfo', //Node info that is currently shown in the widget to the left,
         'isTitle',
         'query',
+        'querySN',
         'searchOpts',
     ],
     watch: {
@@ -110,8 +112,8 @@ export default {
                         shape: 'ellipse',
                         mass : 3,
                         scaling : {
-                          min : 10,
-                          max : 100,
+                          min : 5,
+                          max : 50,
                           label: {
                             enabled: true,
                             min: 14,
@@ -129,10 +131,14 @@ export default {
                         },*/
                     },
                     edges: {
-                        length : 620,
+                        length : 1220,
                         arrows: {
                           to:     {enabled: true, scaleFactor:1}
                         },
+                        smooth: {
+                          type: "diagonalCross",
+                          roundness: 0
+                        }
                     },
                     layout: {
                         randomSeed : 420
@@ -143,9 +149,9 @@ export default {
                         gravitationalConstant: -2000,
                         centralGravity: 0.3,
                         springLength: 95,
-                        springConstant: 0.04,
-                        damping: 0.09,
-                        avoidOverlap: 0
+                        springConstant: 0.00,
+                        damping: 0.9,
+                        avoidOverlap: 1
                       }
                     },
                     interaction: {
@@ -162,8 +168,12 @@ export default {
                 const edgesDataSet = new vis.DataSet();
                 const container = document.getElementById('container');
                 this.network = new vis.Network(container, { nodes: nodesDataSet, edges: edgesDataSet }, options);
-
+                this.network.on('stabilizationIterationsDone', function() {
+                    console.log("TURN OFF BOUNCE");
+                    this.setOptions({physics: {enabled: false}});
+                });
                 this.draggedNodeId = null;
+
                 this.network.on('dragStart', (selection) => {
                     const id = selection.nodes[0];
                     if (id) {
@@ -179,8 +189,10 @@ export default {
                 });
 
                 this.network.on('selectNode', (selection) => {
+                    //console.log(selection.nodes[0].SearchNumber());
                     var id = selection.nodes[0];
                     this.selected = id;
+
                     let position = this.network.getPositions(id);
                     position = position[Object.keys(position)[0]];
                     this.network.moveTo({
@@ -193,6 +205,7 @@ export default {
                     for (var n of this.nodes) {
                         if (n.id == id) {
                             console.log("SELECTED", n);
+                            this.selectedSN = n.SearchNumber;
 
                             // Doesn't work ffs
                             //n.size = 500;
@@ -200,7 +213,7 @@ export default {
 
                             var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
                             var d = Date(n.Timestamp);
-                            d = d.split(' ')
+                            d = d.split(' ');
                             d.pop();
                             d.pop();
                             d.pop();
@@ -282,7 +295,9 @@ export default {
 
     methods: {
         expandNode: function() {
-            this.query(this.selected).then((response) => {
+            this.querySN(this.selectedSN).then((response) => {
+                console.log("expandNode");
+                console.log(this.selected);
                 console.log(response);
                 if (this.searchOpts.mode == 'clicks') {
                     console.log('filtering edges');
@@ -291,7 +306,15 @@ export default {
                 } else {
                     options['edges']['arrows']['to']['enabled'] = true;
                 }
+                console.log("Setting options:");
+                console.log(options);
                 this.network.setOptions(options);
+                this.network.on('stabilizationIterationsDone', function() {
+                  console.log("TURN OFF BOUNCE");
+                  this.setOptions({physics: {enabled: false}});
+                  console.log(this.options)
+                });
+
                 this.stylizeGraph(response.docs, response.references);
                 for (let doc of response.docs) {
                     try {
@@ -417,7 +440,8 @@ export default {
 
     data() {
         return {
-            selected: null
+            selected: null,
+            selectedSN: null
         }
     }
 }
