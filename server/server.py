@@ -103,8 +103,8 @@ def document():
 
 
 if __name__ == '__main__':
-    driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "timo"))
-    session = driver.session()
+    #driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "timo"))
+    #session = driver.session()
 
     solr = pysolr.Solr('http://94.198.25.91:8080/solr/ACC_Legal_Slave', search_handler='/tvrh', results_cls=dict)
     solr_parser = SolrParser()

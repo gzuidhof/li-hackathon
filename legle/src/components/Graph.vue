@@ -76,6 +76,14 @@ const options = {
           damping: 0.09,
           avoidOverlap: 0
         },
+        stabilization: {
+          enabled: true,
+          iterations: 180,
+          updateInterval: 10,
+          onlyDynamicEdges: false,
+          fit: true
+        },
+
         maxVelocity: 5
     }
 };
@@ -152,6 +160,13 @@ export default {
                         springConstant: 0.00,
                         damping: 0.9,
                         avoidOverlap: 1
+                      },
+                      stabilization: {
+                        enabled: true,
+                        iterations: 180,
+                        updateInterval: 10,
+                        onlyDynamicEdges: false,
+                        fit: true
                       }
                     },
                     interaction: {
@@ -309,6 +324,7 @@ export default {
                 console.log("Setting options:");
                 console.log(options);
                 this.network.setOptions(options);
+                this.network.stabilize(1000);
                 this.network.on('stabilizationIterationsDone', function() {
                   console.log("TURN OFF BOUNCE");
                   this.setOptions({physics: {enabled: false}});
