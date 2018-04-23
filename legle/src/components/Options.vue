@@ -48,7 +48,7 @@ export default {
             this.onOptsChange({
                 mode: this.mode,
                 depth: this.depth
-            }); 
+            });
         }
     }
 }

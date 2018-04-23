@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from werkzeug.exceptions import BadRequest
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from neo4j.v1 import GraphDatabase, basic_auth
 import pysolr
 import pprint
@@ -12,6 +12,7 @@ CORS(app)
 
 
 @app.route('/solrdocument')
+@cross_origin(supports_credentials=True)
 def solrdocument():
     ecli = request.args.get('ecli')
     depth = request.args.get('depth', 2)
