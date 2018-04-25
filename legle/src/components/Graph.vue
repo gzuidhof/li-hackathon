@@ -227,7 +227,8 @@ export default {
                             //n.node.physics = false;
 
                             var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
-                            var d = Date(n.Timestamp);
+                            var d = new Date(n.Timestamp * 1000);
+                            d = d.toString();
                             d = d.split(' ');
                             d.pop();
                             d.pop();
