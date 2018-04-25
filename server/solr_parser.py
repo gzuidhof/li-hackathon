@@ -67,11 +67,11 @@ class SolrParser(object):
                 solr_doc['IssuingInstitution']) if 'IssuingInstitution' in solr_doc else IssuingInstanceType.Unknown
 
             verdict, verdict_text = SolrParser.get_verdict(instance_type, solr_doc['Text_Text_1'])
-
+            pprint.pprint(sorted(list(solr_doc.keys())))
             doc = {
                 'id': solr_doc['ID'],
                 'InstanceType': instance_type,
-                'Timestamp': SolrParser.timestring_to_timestamp(solr_doc['timestamp']),
+                'Timestamp': solr_doc['PublicationDate']
             }
 
             if 'SearchNumber' in solr_doc and len(solr_doc['SearchNumber']) > 0:

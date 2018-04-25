@@ -227,7 +227,9 @@ export default {
                             //n.node.physics = false;
 
                             var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
-                            var d = new Date(n.Timestamp * 1000);
+                            let timestamp = (n.Timestamp).toString();
+                            timestamp = timestamp.slice(0, 4) + '-' + timestamp.slice(4, 6) + '-' + timestamp.slice(6,8);
+                            var d = new Date(timestamp);
                             d = d.toString();
                             d = d.split(' ');
                             d.pop();
@@ -325,7 +327,6 @@ export default {
                 console.log("Setting options:");
                 console.log(options);
                 this.network.setOptions(options);
-                this.network.stabilize(1000);
                 this.network.on('stabilizationIterationsDone', function() {
                   console.log("TURN OFF BOUNCE");
                   this.setOptions({physics: {enabled: false}});
@@ -423,6 +424,8 @@ export default {
                     nodes[i].liSearchQuery = nodes[i].PublicationNumber;
                     label = '\n' + nodes[i].SearchNumber + '\n';
                 }
+                nodes[i]['x'] = Math.sqrt(nodes[i]['Timestamp'])*10;
+
                 nodes[i]['label'] = label;
                 if(nodes[i].Law){
                   nodes[i]['shape'] = 'box';

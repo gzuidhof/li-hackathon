@@ -88,7 +88,7 @@ def document():
             references.append({
                 'from': neo4j_id_to_doc_id[ref.start],
                 'to': neo4j_id_to_doc_id[ref.end],
-                'count': ref.get('Count'),
+                    'count': ref.get('Count'),
             })
 
     res = jsonify({
