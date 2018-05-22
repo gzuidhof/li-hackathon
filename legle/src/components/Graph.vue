@@ -41,6 +41,16 @@ const SOURCES = ['Rechtspraak.nl', 'Ove', 'Xpe', 'wet', 'Ken', 'Lok', 'Pra', 'Me
     'NJF', 'Raa', 'Com', 'BNB', 'IE-', 'Prg', 'Ope', 'Mil', 'Blo', 'NJ', 'NDF', 'Zak', 'EPO', 'NZa',
     'SC', 'Reg', 'FED', 'RFR', 'JAR', 'WFR', 'EHR'];
 
+const HIERARCHY = {
+  'Onbekend': 6,
+  'Rechtbanken': 5,
+  'Gerechtshoven': 4,
+  'Centrale Nederlandse rechtscolleges': 3,  // = Hoge Raad
+  'Rijksoverheid': 2,
+  'Europese gerechtshoven': 1,
+  'Europese instellingen': 0
+};
+
 const INSTANCE_MAP = {
     '0': '',
     '1': 'Gerechtshof',
@@ -55,7 +65,18 @@ const options = {
             color: '#eee',
         },
         shape: 'ellipse',
-        mass : 3
+        mass : 3,
+        scaling : {
+          min : 14,
+          max : 500,
+          label: {
+            enabled: true,
+            min: 14,
+            max: 30,
+            maxVisible: 30,
+            drawThreshold: 5
+          },
+        },
     },
     edges: {
         length : 500,
@@ -67,7 +88,7 @@ const options = {
         randomSeed : 420
     },
     physics: {
-        enabled: true,
+        enabled: false,
         barnesHut: {
           gravitationalConstant: -2000,
           centralGravity: 0.3,
@@ -77,14 +98,17 @@ const options = {
           avoidOverlap: 0
         },
         stabilization: {
-          enabled: true,
+          enabled: false,
           iterations: 180,
           updateInterval: 10,
           onlyDynamicEdges: false,
-          fit: true
+          fit: false
         },
 
         maxVelocity: 5
+    },
+    interaction: {
+        hover: true
     }
 };
 
@@ -120,8 +144,8 @@ export default {
                         shape: 'ellipse',
                         mass : 3,
                         scaling : {
-                          min : 5,
-                          max : 50,
+                          min : 0,
+                          max : 500,
                           label: {
                             enabled: true,
                             min: 14,
@@ -152,7 +176,7 @@ export default {
                         randomSeed : 420
                     },
                     physics: {
-                      enabled: true,
+                      enabled: false,
                       barnesHut: {
                         gravitationalConstant: -2000,
                         centralGravity: 0.3,
@@ -162,11 +186,11 @@ export default {
                         avoidOverlap: 1
                       },
                       stabilization: {
-                        enabled: true,
+                        enabled: false,
                         iterations: 180,
                         updateInterval: 10,
                         onlyDynamicEdges: false,
-                        fit: true
+                        fit: false
                       }
                     },
                     interaction: {
@@ -178,7 +202,7 @@ export default {
                     options['layout'] = {
                         improvedLayout: false
                     };
-                };
+                }
                 const nodesDataSet = new vis.DataSet();
                 const edgesDataSet = new vis.DataSet();
                 const container = document.getElementById('container');
@@ -191,13 +215,13 @@ export default {
 
                 this.network.on('dragStart', (selection) => {
                     const id = selection.nodes[0];
-                    if (id) {
+                    if (id && this.clusters.indexOf(id) < 0) {
                         this.draggedNodeId = id;
                         this.nodesDataSet.update({id, fixed: false});
                     }
                 });
                 this.network.on('dragEnd', () => {
-                    if (this.draggedNodeId) {
+                    if (this.draggedNodeId && !this.draggedNodeId.startsWith("cluster")) {
                         this.nodesDataSet.update({id: this.draggedNodeId, fixed: true});
                         this.draggedNodeId = null;
                     }
@@ -207,7 +231,6 @@ export default {
                     //console.log(selection.nodes[0].SearchNumber());
                     var id = selection.nodes[0];
                     this.selected = id;
-
                     let position = this.network.getPositions(id);
                     position = position[Object.keys(position)[0]];
                     this.network.moveTo({
@@ -237,13 +260,13 @@ export default {
                             d.pop();
                             d = d.join(' ');
                             if(n.Sources){
-                              console.log(n);
                               const fields = {
                                       "ID": n.SearchNumber,
                                       "Bron": n.Sources[0],
                                       "Datum": d,
                                       "Categorie": n.LawArea[0],
                                       "Nummer": pubNumber,
+                                      "Institution Group": n.IssuingInstitution_Group
                              };
                              if (n.InstanceType != "0") {
                                  fields['Instantie'] = INSTANCE_MAP[n.InstanceType];
@@ -292,7 +315,11 @@ export default {
             }
 
             console.log('stylizing');
+
+            this.clusters = [];
             this.stylizeGraph(nodes, edges);
+            console.log("clusters: " + this.clusters);
+
             this.nodes = nodes;
 
             console.log("Graph changed, n nodes", nodes.length, 'n edjes', edges.length);
@@ -308,12 +335,14 @@ export default {
 
             this.network.setData(data);
             this.network.setOptions(options);
+            this.clusterNodes();
         }
     },
 
     methods: {
         expandNode: function() {
             this.querySN(this.selectedSN).then((response) => {
+
                 console.log("expandNode");
                 console.log(this.selected);
                 console.log(response);
@@ -332,8 +361,9 @@ export default {
                   this.setOptions({physics: {enabled: false}});
                   console.log(this.options)
                 });
-
+                this.expandClusters();
                 this.stylizeGraph(response.docs, response.references);
+
                 for (let doc of response.docs) {
                     try {
                         this.nodesDataSet.add(doc);
@@ -356,16 +386,20 @@ export default {
                     }
                 }
 
+
+                this.clusterNodes();
             });
         },
 
         stylizeGraph: function(nodes, edges) {
+            let bwb_groups = {};
+
             for (var i = 0; i < nodes.length; i++) {
                 var color = '#d6e6ff';
                 var fontColor = '#EEE';
 
-                nodes[i]['node'] = {title: nodes[i].Title}  //Doesn't actually work
-                nodes[i]['title'] = nodes[i].Title; //Doesn't actually work
+                //nodes[i]['node'] = {title: nodes[i].Title};  //Doesn't actually work
+
                 /*
                 nodes[i]['chosen'] = { //Should work, but doens't
                     'node': function(values, id, selected, hovering) {
@@ -424,12 +458,30 @@ export default {
                     nodes[i].liSearchQuery = nodes[i].PublicationNumber;
                     label = '\n' + nodes[i].SearchNumber + '\n';
                 }
-                nodes[i]['x'] = Math.sqrt(nodes[i]['Timestamp'])*10;
 
-                nodes[i]['label'] = label;
+                if (nodes[i].SearchNumber.startsWith('BWB')) {
+                    let bwbPrefix = nodes[i].SearchNumber.split('/')[0];
+                    if (bwbPrefix in bwb_groups) {
+                        bwb_groups[bwbPrefix].push(i);
+                    } else {
+                        bwb_groups[bwbPrefix] = [i];
+                    }
+                }
+
+                nodes[i]['x'] = Math.sqrt(nodes[i]['Timestamp'])*20;
+                nodes[i]['y'] = getNodeHierarchy(nodes[i]) * 500;
+
+                nodes[i].fixed = {
+                  x: true,
+                  y: true
+                };
+
+                nodes[i]['label'] = label; //Doesn't actually work
+
                 if(nodes[i].Law){
                   nodes[i]['shape'] = 'box';
                 }
+
                 nodes[i]['value'] = 100000*nodes[i]['PageRank'];
                 if(nodes[i].Law) {
                     nodes[i]['value'] = 3.0;
@@ -437,17 +489,67 @@ export default {
                 if (isNaN(nodes[i]['value'])) {
                     nodes[i]['value'] = 1.5;
                 }
-                console.log(nodes[i]);
-                console.log(label);
+                nodes[i]['value'] = nodes[i]['value'] * 1000;
             }
-            for(var i = 0; i < edges.length; i++){
-                let count = edges[i].count;
-                edges[i]['value'] = count;
+            for(var i = 0; i < edges.length; i++) {
+              let count = edges[i].count;
+              edges[i]['value'] = count;
             }
 
+            console.log('bwb groups:');
+            console.log(bwb_groups);
+
+            for (let key in bwb_groups) {
+                if (bwb_groups.hasOwnProperty(key)) {
+                    if (bwb_groups[key].length > 1) {
+                        for (var i = 0; i < bwb_groups[key].length; i++) {
+                            let nodeID = bwb_groups[key][i];
+                            nodes[nodeID]['clusterID'] = key;
+                        }
+
+                        if (!this.clusters.indexOf(key) >= 0)
+                          this.clusters.push(key);
+                    }
+                }
+            }
+            console.log("clusters: ");
+            console.log(this.clusters);
         },
+        clusterNodes: function() {
+            var clusterOptionsByData;
+            for (var i = 0; i < this.clusters.length; i++) {
+              let clusterID = this.clusters[i];
+              console.log("Clustering:");
+              console.log(clusterID);
+              clusterOptionsByData = {
+                processProperties: function (clusterOptions, childNodes, childEdges) {
+                  let childrenCount = 0;
+                  for (var j = 0; j < childNodes.length; j++) {
+                    childrenCount += childNodes[j].childrenCount || 1;
+                  }
 
+                  clusterOptions.childrenCount = childrenCount;
+                  clusterOptions.label = clusterID + " (" + childrenCount + ")";
+                  clusterOptions.id = clusterID;
+                  clusterOptions.color = childNodes[0].color;
 
+                  return clusterOptions;
+                },
+                joinCondition: function (childOptions) {
+                  return (childOptions.hasOwnProperty('clusterID') &&
+                    childOptions['clusterID'] === clusterID);
+                },
+                clusterNodeProperties: {borderWidth: 3, shape: 'box'}
+              };
+
+              this.network.cluster(clusterOptionsByData);
+            }
+        },
+        expandClusters: function() {
+          for (var i = 0; i < this.clusters.length; i++){
+            this.network.openCluster(this.clusters[i]);
+          }
+        }
     },
 
     mounted: function() {
@@ -477,6 +579,15 @@ function chunkSubstr(str, size) {
   return chunks;
 }
 
+function findCluster(clusters, id){
+  for (var i = 0; i < clusters.length; i++) {
+    if (clusters[i].id === id) {
+      return i;
+    }
+  }
+  return null;
+}
+
 function filterEdges(edges) {
     const result = [];
     const added = {};
@@ -490,6 +601,13 @@ function filterEdges(edges) {
         result.push(edge);
     }
     return result;
+}
+
+function getNodeHierarchy(node) {
+  if (node.IssuingInstitution_Group in HIERARCHY)
+    return HIERARCHY[node.IssuingInstitution_Group];
+  else
+    return HIERARCHY['Onbekend']
 }
 
 function splitValue(value, index) {

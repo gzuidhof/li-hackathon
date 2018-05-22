@@ -71,7 +71,8 @@ class SolrParser(object):
             doc = {
                 'id': solr_doc['ID'],
                 'InstanceType': instance_type,
-                'Timestamp': solr_doc['PublicationDate']
+                'Timestamp': solr_doc['PublicationDate'],
+                'IssuingInstitution_Group': solr_doc['IssuingInstitution_Group']
             }
 
             if 'SearchNumber' in solr_doc and len(solr_doc['SearchNumber']) > 0:
