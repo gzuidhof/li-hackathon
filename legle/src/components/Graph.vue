@@ -240,73 +240,81 @@ export default {
                             easingFunction: "easeOutQuad"
                         }
                     });
-                    for (var n of this.nodes) {
+                    console.log("selectNode selection", selection);
+                    console.log("clusters: ", this.clusters);
+                    console.log("cluster index?: ", this.clusters.indexOf(selection.nodes[0]));
+                    // Check if the selected node is a cluster of nodes
+                    let cluster_index = this.clusters.indexOf(this.selected);
+                    if (cluster_index >= 0) {
+                      this.selectedSN = this.selected
+                    } else {
+                      // Otherwise, find the selected node
+                      for (var n of this.nodes) {
                         if (n.id == id) {
-                            console.log("SELECTED", n);
-                            this.selectedSN = n.SearchNumber;
-
-                            // Doesn't work ffs
-                            //n.size = 500;
-                            //n.node.physics = false;
-
-                            var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
-                            let timestamp = (n.Timestamp).toString();
-                            timestamp = timestamp.slice(0, 4) + '-' + timestamp.slice(4, 6) + '-' + timestamp.slice(6,8);
-                            var d = new Date(timestamp);
-                            d = d.toString();
-                            d = d.split(' ');
-                            d.pop();
-                            d.pop();
-                            d.pop();
-                            d = d.join(' ');
-                            if(n.Sources){
-                              const fields = {
-                                      "ID": n.SearchNumber,
-                                      "Bron": n.Sources[0],
-                                      "Datum": d,
-                                      "Categorie": n.LawArea[0],
-                                      "Nummer": pubNumber,
-                                      "Institution Group": n.IssuingInstitution_Group
-                             };
-                             if (n.InstanceType != "0") {
-                                 fields['Instantie'] = INSTANCE_MAP[n.InstanceType];
-                             }
-                             if (n.Verdict === 'True') {
-                                 fields['Vernietigd'] = '';
-                             }
-                              this.setWidgetInfo({
-                                  summary: n.Summary,
-                                  fields,
-                                  id: n.id,
-                                  liSearchQuery: n.liSearchQuery,
-                                  isWetBook: false,
-                                  verdict: shortenString(n.VerdictText, 140),
-                              });
+                          console.log("SELECTED", n);
+                          this.selectedSN = n.SearchNumber;
+                          // Set the widgetinfo
+                          var pubNumber = n.PublicationNumber ? n.PublicationNumber: 'Geen';
+                          let timestamp = (n.Timestamp).toString();
+                          timestamp = timestamp.slice(0, 4) + '-' + timestamp.slice(4, 6) + '-' + timestamp.slice(6,8);
+                          var d = new Date(timestamp);
+                          d = d.toString();
+                          d = d.split(' ');
+                          d.pop();
+                          d.pop();
+                          d.pop();
+                          d = d.join(' ');
+                          if(n.Sources){
+                            const fields = {
+                              "ID": n.SearchNumber,
+                              "Bron": n.Sources[0],
+                              "Datum": d,
+                              "Categorie": n.LawArea[0],
+                              "Nummer": pubNumber,
+                              "Institution Group": n.IssuingInstitution_Group
+                            };
+                            if (n.InstanceType != "0") {
+                              fields['Instantie'] = INSTANCE_MAP[n.InstanceType];
                             }
-                            else {
-                              var fullink = n.Link.split('/');
-                              var len = fullink.length;
-                              var article = fullink.pop() || fullink.pop();
-                              if(len == 4){
-                                  article = fullink.pop();
-                              }
-                              article = capitalizeFirstLetter(article);
-                              var firstDigit = article.match(/\d/);
-                              var indexed = article.indexOf(firstDigit);
-                              article = splitValue(article, indexed);
-                              this.setWidgetInfo({
-                                  summary: n.Text,
-                                  fields: {
-                                      "Wetboek" : n.SearchNumber,
-                                      "Artikel" : article
-                                  },
-                                  link : n.Link,
-                                  isWetBook: true
-                              });
+                            if (n.Verdict === 'True') {
+                              fields['Vernietigd'] = '';
                             }
-                            break;
+                            this.setWidgetInfo({
+                              summary: n.Summary,
+                              fields,
+                              id: n.id,
+                              liSearchQuery: n.liSearchQuery,
+                              isWetBook: false,
+                              verdict: shortenString(n.VerdictText, 140),
+                            });
+                          }
+                          else {
+                            var fullink = n.Link.split('/');
+                            var len = fullink.length;
+                            var article = fullink.pop() || fullink.pop();
+                            if(len == 4){
+                              article = fullink.pop();
+                            }
+                            article = capitalizeFirstLetter(article);
+                            var firstDigit = article.match(/\d/);
+                            var indexed = article.indexOf(firstDigit);
+                            article = splitValue(article, indexed);
+                            this.setWidgetInfo({
+                              summary: n.Text,
+                              fields: {
+                                "Wetboek" : n.SearchNumber,
+                                "Artikel" : article
+                              },
+                              link : n.Link,
+                              isWetBook: true
+                            });
+                          }
+                          break;
                         }
+                      }
                     }
+
+
                 });
                 this.network.on('deselectNode', () => {
                     console.log("DESELECT");
@@ -317,6 +325,9 @@ export default {
             console.log('stylizing');
 
             this.clusters = [];
+            // this list maintains which clusters have been manually opened by the user;
+            // we don't want to accidentally re-cluster them when the graph is expanded
+            this.expandedClusterKeys = [];
             this.stylizeGraph(nodes, edges);
             console.log("clusters: " + this.clusters);
 
@@ -341,57 +352,75 @@ export default {
 
     methods: {
         expandNode: function() {
-            this.querySN(this.selectedSN).then((response) => {
-
+            console.log("Selected:");
+            console.log(this.selectedSN);
+            let clusterIndex = this.clusters.indexOf(this.selectedSN);
+            // Check if we want to expand a cluster
+            if (clusterIndex >= 0)
+            {
+              // Open it
+              this.network.openCluster(this.selectedSN);
+              // Remove it from the list of cluster indices
+              this.clusters.splice(clusterIndex, 1);
+              // Add it to the manually expanded clusters list
+              this.expandedClusterKeys.push(this.selectedSN);
+            } else {
+              // Otherwise, send a query for the selected node and display the results
+              this.querySN(this.selectedSN).then((response) => {
                 console.log("expandNode");
                 console.log(this.selected);
                 console.log(response);
                 if (this.searchOpts.mode == 'clicks') {
-                    console.log('filtering edges');
-                    response.references = filterEdges(response.references);
-                    options['edges']['arrows']['to']['enabled'] = false;
+                  console.log('filtering edges');
+                  response.references = filterEdges(response.references);
+                  options['edges']['arrows']['to']['enabled'] = false;
                 } else {
-                    options['edges']['arrows']['to']['enabled'] = true;
+                  options['edges']['arrows']['to']['enabled'] = true;
                 }
                 console.log("Setting options:");
                 console.log(options);
                 this.network.setOptions(options);
-                this.network.on('stabilizationIterationsDone', function() {
+                this.network.on('stabilizationIterationsDone', function () {
                   console.log("TURN OFF BOUNCE");
                   this.setOptions({physics: {enabled: false}});
                   console.log(this.options)
                 });
+
+                // We expand the clusters for a brief moment, otherwise new edges that point towards documents
+                // within a cluster are not formed
                 this.expandClusters();
                 this.stylizeGraph(response.docs, response.references);
 
                 for (let doc of response.docs) {
-                    try {
-                        this.nodesDataSet.add(doc);
-                        this.nodes.push(doc);
-                    } catch (e) { }
+                  try {
+                    this.nodesDataSet.add(doc);
+                    this.nodes.push(doc);
+                  } catch (e) {
+                  }
                 }
 
                 for (let ref of response.references) {
-                    let eds = this.edgesDataSet;
-                    let found = false;
-                    for(let key of Object.keys(eds._data)) {
-                        let edge = eds._data[key];
-                        if (edge.from === ref.from && edge.to === ref.to) {
-                            found = true;
-                            break;
-                        }
+                  let eds = this.edgesDataSet;
+                  let found = false;
+                  for (let key of Object.keys(eds._data)) {
+                    let edge = eds._data[key];
+                    if (edge.from === ref.from && edge.to === ref.to) {
+                      found = true;
+                      break;
                     }
-                    if (!found) {
-                        eds.add(ref);
-                    }
+                  }
+                  if (!found) {
+                    eds.add(ref);
+                  }
                 }
 
 
                 this.clusterNodes();
-            });
+              });
+            }
         },
 
-        stylizeGraph: function(nodes, edges) {
+        stylizeGraph: function(nodes, edges, updateClusters = true) {
             let bwb_groups = {};
 
             for (var i = 0; i < nodes.length; i++) {
@@ -476,7 +505,7 @@ export default {
                   y: true
                 };
 
-                nodes[i]['label'] = label; //Doesn't actually work
+                //nodes[i]['label'] = label;
 
                 if(nodes[i].Law){
                   nodes[i]['shape'] = 'box';
@@ -491,29 +520,33 @@ export default {
                 }
                 nodes[i]['value'] = nodes[i]['value'] * 1000;
             }
+
+            // Edge thickness
             for(var i = 0; i < edges.length; i++) {
               let count = edges[i].count;
               edges[i]['value'] = count;
             }
 
-            console.log('bwb groups:');
-            console.log(bwb_groups);
+            if (updateClusters) {
+              console.log('bwb groups:');
+              console.log(bwb_groups);
 
-            for (let key in bwb_groups) {
+              for (let key in bwb_groups) {
                 if (bwb_groups.hasOwnProperty(key)) {
-                    if (bwb_groups[key].length > 1) {
-                        for (var i = 0; i < bwb_groups[key].length; i++) {
-                            let nodeID = bwb_groups[key][i];
-                            nodes[nodeID]['clusterID'] = key;
-                        }
-
-                        if (!this.clusters.indexOf(key) >= 0)
-                          this.clusters.push(key);
+                  if (bwb_groups[key].length > 1) {
+                    for (var i = 0; i < bwb_groups[key].length; i++) {
+                      let nodeID = bwb_groups[key][i];
+                      nodes[nodeID]['clusterID'] = key;
                     }
+                    // Don't add the cluster if it already exists, or it was manually expanded by the user
+                    if (this.clusters.indexOf(key) < 0 && this.expandedClusterKeys.indexOf(key) < 0)
+                      this.clusters.push(key);
+                  }
                 }
+              }
+              console.log("clusters: ");
+              console.log(this.clusters);
             }
-            console.log("clusters: ");
-            console.log(this.clusters);
         },
         clusterNodes: function() {
             var clusterOptionsByData;
@@ -529,7 +562,7 @@ export default {
                   }
 
                   clusterOptions.childrenCount = childrenCount;
-                  clusterOptions.label = clusterID + " (" + childrenCount + ")";
+                  clusterOptions.label = " (" + childrenCount + ")";
                   clusterOptions.id = clusterID;
                   clusterOptions.color = childNodes[0].color;
 
