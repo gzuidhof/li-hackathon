@@ -224,6 +224,8 @@ export default {
                     if (this.draggedNodeId && !this.draggedNodeId.startsWith("cluster")) {
                         this.nodesDataSet.update({id: this.draggedNodeId, fixed: true});
                         this.draggedNodeId = null;
+                        console.log('dragEnd');
+                        console.log(this.nodesDataSet);
                     }
                 });
 
@@ -240,9 +242,6 @@ export default {
                             easingFunction: "easeOutQuad"
                         }
                     });
-                    console.log("selectNode selection", selection);
-                    console.log("clusters: ", this.clusters);
-                    console.log("cluster index?: ", this.clusters.indexOf(selection.nodes[0]));
                     // Check if the selected node is a cluster of nodes
                     let cluster_index = this.clusters.indexOf(this.selected);
                     if (cluster_index >= 0) {
@@ -322,12 +321,12 @@ export default {
                 });
             }
 
-            console.log('stylizing');
-
             this.clusters = [];
             // this list maintains which clusters have been manually opened by the user;
             // we don't want to accidentally re-cluster them when the graph is expanded
             this.expandedClusterKeys = [];
+
+            console.log('stylizing');
             this.stylizeGraph(nodes, edges);
             console.log("clusters: " + this.clusters);
 
@@ -364,6 +363,16 @@ export default {
               this.clusters.splice(clusterIndex, 1);
               // Add it to the manually expanded clusters list
               this.expandedClusterKeys.push(this.selectedSN);
+              // Autoposition the nodes
+              console.log("Opening: ", this.selectedSN);
+              for (var i = 0; i < this.nodes.length; i++){
+                  if (this.nodes[i].hasOwnProperty('clusterID'))
+
+                  if (this.nodes[i].hasOwnProperty('clusterID') && this.nodes[i]['clusterID'] === this.selectedSN) {
+                    console.log("Maybe autoposition:", this.nodes[i]);
+                    this.autoPositionNode(this.nodes, i, 80, 80, 40, false);
+                  }
+              }
             } else {
               // Otherwise, send a query for the selected node and display the results
               this.querySN(this.selectedSN).then((response) => {
@@ -389,6 +398,7 @@ export default {
                 // We expand the clusters for a brief moment, otherwise new edges that point towards documents
                 // within a cluster are not formed
                 this.expandClusters();
+
                 this.stylizeGraph(response.docs, response.references);
 
                 for (let doc of response.docs) {
@@ -419,8 +429,7 @@ export default {
               });
             }
         },
-
-        stylizeGraph: function(nodes, edges, updateClusters = true) {
+        stylizeGraph: function(nodes, edges, updateClusters = true, minDistance = 80, stepDistance = 80, xJitter = 40) {
             let bwb_groups = {};
 
             for (var i = 0; i < nodes.length; i++) {
@@ -497,15 +506,16 @@ export default {
                     }
                 }
 
-                nodes[i]['x'] = Math.sqrt(nodes[i]['Timestamp'])*20;
-                nodes[i]['y'] = getNodeHierarchy(nodes[i]) * 500;
+                if (nodes[i].hasOwnProperty('manualPosition')){
+                  console.log("Setting position", nodes[i]);
+                }
 
                 nodes[i].fixed = {
                   x: true,
                   y: true
                 };
 
-                //nodes[i]['label'] = label;
+                nodes[i]['label'] = ''+i;
 
                 if(nodes[i].Law){
                   nodes[i]['shape'] = 'box';
@@ -537,6 +547,7 @@ export default {
                     for (var i = 0; i < bwb_groups[key].length; i++) {
                       let nodeID = bwb_groups[key][i];
                       nodes[nodeID]['clusterID'] = key;
+
                     }
                     // Don't add the cluster if it already exists, or it was manually expanded by the user
                     if (this.clusters.indexOf(key) < 0 && this.expandedClusterKeys.indexOf(key) < 0)
@@ -547,6 +558,41 @@ export default {
               console.log("clusters: ");
               console.log(this.clusters);
             }
+            this.autoPositionNodes(nodes, minDistance, stepDistance, xJitter);
+        },
+        autoPositionNodes: function(nodes, minDistance = 80, stepDistance = 80, xJitter=40) {
+          for (var i = 0; i < nodes.length; i++) {
+              this.autoPositionNode(nodes, i, minDistance, stepDistance, xJitter)
+          }
+        },
+        autoPositionNode: function(nodes, node_index, minDistance = 80, stepDistance = 80, xJitter = 40, ignoreClustered=true) {
+          nodes[node_index]['x'] = Math.sqrt(nodes[node_index]['Timestamp'])*20;
+          nodes[node_index]['y'] = getNodeHierarchy(nodes[node_index]) * 500;
+
+          var didOverlap = false;
+          while (this.overlapsWithEarlierNodes(nodes, node_index, minDistance, ignoreClustered)) {
+            // Move this node down until there is no overlap with previously added nodes
+            nodes[node_index]['y'] += stepDistance;
+            didOverlap = true;
+          }
+          // Add some jitter to make edges more visible
+          if (didOverlap) {
+            nodes[node_index]['x'] += (Math.random() - 0.5) * xJitter;
+          }
+        },
+        overlapsWithEarlierNodes: function(nodes, nodeIndex, minDistance = 80, ignoreClustered = true) {
+          let xPos = nodes[nodeIndex]['x'];
+          let yPos = nodes[nodeIndex]['y'];
+          for (var j = 0; j < nodeIndex; j++) {
+            if (ignoreClustered && nodes[j].hasOwnProperty('clusterID') )
+              continue;
+            let xPosOther = nodes[j]['x'];
+            let yPosOther = nodes[j]['y'];
+            if (Math.sqrt(Math.pow(xPosOther - xPos, 2) + Math.pow(yPosOther - yPos, 2)) < minDistance) {
+              return true;
+            }
+          }
+          return false;
         },
         clusterNodes: function() {
             var clusterOptionsByData;
