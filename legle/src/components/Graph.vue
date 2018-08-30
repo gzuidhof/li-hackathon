@@ -58,6 +58,18 @@ const INSTANCE_MAP = {
 };
 
 
+const LAYOUT_OPTIONS = {
+    xJitter: 10,
+    yJitter: 0,
+    gridWidth: 400,
+    gridHeight: 800,
+    xGridNum: 50,
+    yGridNum: 7,      // From the HIERARCHY above
+    nodeMinDistance: 60,
+    overlapStep: 60
+};
+
+
 const options = {
     nodes: {
         color: '#e00',
@@ -81,8 +93,12 @@ const options = {
     edges: {
         length : 500,
         arrows: {
-            to:     {enabled: true, scaleFactor:1}
+            to:     {enabled: true, scaleFactor:0.4}
         },
+        width: 0.6,
+        hoverWidth: 1.0,
+        selectionWidth: 3
+
     },
     layout: {
         randomSeed : 420
@@ -165,12 +181,15 @@ export default {
                     edges: {
                         length : 1220,
                         arrows: {
-                          to:     {enabled: true, scaleFactor:1}
+                          to:     {enabled: true, scaleFactor:0.4}
                         },
                         smooth: {
                           type: "diagonalCross",
                           roundness: 0
-                        }
+                        },
+                        width: 0.6,
+                        hoverWidth: 1.0,
+                        selectionWidth: 3
                     },
                     layout: {
                         randomSeed : 420
@@ -210,9 +229,15 @@ export default {
                 this.network.on('stabilizationIterationsDone', function() {
                     console.log("TURN OFF BOUNCE");
                     this.setOptions({physics: {enabled: false}});
-                });
-                this.draggedNodeId = null;
 
+
+                });
+
+                this.network.on("beforeDrawing", function (ctx) {
+                    drawGrid(ctx);
+                });
+
+                this.draggedNodeId = null;
                 this.network.on('dragStart', (selection) => {
                     const id = selection.nodes[0];
                     if (id && this.clusters.indexOf(id) < 0) {
@@ -332,7 +357,7 @@ export default {
 
             this.nodes = nodes;
 
-            console.log("Graph changed, n nodes", nodes.length, 'n edjes', edges.length);
+            console.log("Graph changed, n nodes: ", nodes.length, 'n edges: ', edges.length);
 
             this.nodesDataSet = new vis.DataSet(nodes);
             this.edgesDataSet = new vis.DataSet(edges);
@@ -346,6 +371,15 @@ export default {
             this.network.setData(data);
             this.network.setOptions(options);
             this.clusterNodes();
+
+            var id = nodes[0]['id'];
+            let position = this.network.getPositions(id);
+            position = position[Object.keys(position)[0]];
+            console.log("Move to position: ", position, "id: ", id, "node: ", this.nodes[0]);
+            this.network.moveTo({
+              position,
+              scale: 0.5,
+            });
         }
     },
 
@@ -370,7 +404,7 @@ export default {
 
                   if (this.nodes[i].hasOwnProperty('clusterID') && this.nodes[i]['clusterID'] === this.selectedSN) {
                     console.log("Maybe autoposition:", this.nodes[i]);
-                    this.autoPositionNode(this.nodes, i, 80, 80, 40, false);
+                    this.autoPositionNode(this.nodes, i, false);
                   }
               }
             } else {
@@ -429,7 +463,7 @@ export default {
               });
             }
         },
-        stylizeGraph: function(nodes, edges, updateClusters = true, minDistance = 80, stepDistance = 80, xJitter = 40) {
+        stylizeGraph: function(nodes, edges, updateClusters = true) {
             let bwb_groups = {};
 
             for (var i = 0; i < nodes.length; i++) {
@@ -532,9 +566,12 @@ export default {
             }
 
             // Edge thickness
+            console.log("EDGES: ");
+            console.log(edges);
             for(var i = 0; i < edges.length; i++) {
               let count = edges[i].count;
-              edges[i]['value'] = count;
+              //edges[i]['value'] = count/1000;
+              edges[i]['width'] = 0.6;
             }
 
             if (updateClusters) {
@@ -558,29 +595,35 @@ export default {
               console.log("clusters: ");
               console.log(this.clusters);
             }
-            this.autoPositionNodes(nodes, minDistance, stepDistance, xJitter);
+            this.autoPositionNodes(nodes);
+
+
         },
-        autoPositionNodes: function(nodes, minDistance = 80, stepDistance = 80, xJitter=40) {
+        autoPositionNodes: function(nodes) {
           for (var i = 0; i < nodes.length; i++) {
-              this.autoPositionNode(nodes, i, minDistance, stepDistance, xJitter)
+              this.autoPositionNode(nodes, i)
           }
         },
-        autoPositionNode: function(nodes, node_index, minDistance = 80, stepDistance = 80, xJitter = 40, ignoreClustered=true) {
-          nodes[node_index]['x'] = Math.sqrt(nodes[node_index]['Timestamp'])*20;
-          nodes[node_index]['y'] = getNodeHierarchy(nodes[node_index]) * 500;
+        autoPositionNode: function(nodes, node_index, ignoreClustered=true) {
+          let gridpos = timestampToGridPos(nodes[node_index]['Timestamp'].toString());
+          let gridX = gridpos[0];
+          let gridPercentage = gridpos[1];
+          nodes[node_index]['x'] = gridX * LAYOUT_OPTIONS.gridWidth - (1 -gridPercentage) * LAYOUT_OPTIONS.gridWidth;
+          nodes[node_index]['y'] = getNodeHierarchy(nodes[node_index]) * LAYOUT_OPTIONS.gridHeight;
 
           var didOverlap = false;
-          while (this.overlapsWithEarlierNodes(nodes, node_index, minDistance, ignoreClustered)) {
+          while (this.overlapsWithEarlierNodes(nodes, node_index, LAYOUT_OPTIONS.nodeMinDistance, ignoreClustered)) {
             // Move this node down until there is no overlap with previously added nodes
-            nodes[node_index]['y'] += stepDistance;
+            nodes[node_index]['y'] += LAYOUT_OPTIONS.overlapStep;
             didOverlap = true;
           }
           // Add some jitter to make edges more visible
-          if (didOverlap) {
-            nodes[node_index]['x'] += (Math.random() - 0.5) * xJitter;
-          }
+          nodes[node_index]['x'] += (Math.random() - 0.5) * LAYOUT_OPTIONS.xJitter;
+
+          // Add some y jitter to make edges more visible
+          nodes[node_index]['y'] += (Math.random() - 0.5) * LAYOUT_OPTIONS.yJitter;
         },
-        overlapsWithEarlierNodes: function(nodes, nodeIndex, minDistance = 80, ignoreClustered = true) {
+        overlapsWithEarlierNodes: function(nodes, nodeIndex, ignoreClustered = true) {
           let xPos = nodes[nodeIndex]['x'];
           let yPos = nodes[nodeIndex]['y'];
           for (var j = 0; j < nodeIndex; j++) {
@@ -588,7 +631,7 @@ export default {
               continue;
             let xPosOther = nodes[j]['x'];
             let yPosOther = nodes[j]['y'];
-            if (Math.sqrt(Math.pow(xPosOther - xPos, 2) + Math.pow(yPosOther - yPos, 2)) < minDistance) {
+            if (Math.sqrt(Math.pow(xPosOther - xPos, 2) + Math.pow(yPosOther - yPos, 2)) < LAYOUT_OPTIONS.nodeMinDistance) {
               return true;
             }
           }
@@ -680,6 +723,100 @@ function filterEdges(edges) {
         result.push(edge);
     }
     return result;
+}
+
+function timestampToGridPos(timestamp) {
+    let now = new Date();
+    let curYear = now.getFullYear();
+    let year = parseInt(timestamp.slice(0, 4), 10);
+    let month = parseInt(timestamp.slice(4, 6), 10);
+    let day = parseInt(timestamp.slice(6, 8), 10);
+
+    // Earlier than this year, x grid will represent decades
+    var decadesStart = curYear - 20;
+    // Round to decade before
+    decadesStart = decadesStart - (decadesStart % 10);
+
+    var gridPos = 0;
+    var gridPercentage = 0.5;
+
+    // First twenty squares are years
+    if (year >= decadesStart){
+        gridPos = year - curYear;
+        gridPercentage = (month - 1) / 11
+    } else {
+        // Then we move to decades
+        gridPos = (decadesStart - curYear) - Math.floor((decadesStart - year) / 10) - 1;
+        gridPercentage = (year % 10) / 10
+    }
+    return [gridPos, gridPercentage];
+}
+
+function gridPosToXLabel(gridpos){
+    let now = new Date();
+    let curYear = now.getFullYear();
+
+    // Earlier than this year, x grid will represent decades
+    var decadesStart = curYear - 20;
+    // Round to decade before
+    decadesStart = decadesStart - (decadesStart % 10);
+
+    let decadesStartGrid = curYear - decadesStart;
+    if (gridpos * -1 <= decadesStartGrid) {
+      return (curYear + gridpos).toString()
+    } else {
+      let decade = decadesStart + (decadesStartGrid + gridpos) * 10;
+      //let decade = Math.floor((curYear + gridpos)/10) * 10;
+      return decade.toString() + " - " + (decade + 10).toString();
+    }
+}
+
+function drawGrid(ctx) {
+    let maxX = 0;
+    let minX = LAYOUT_OPTIONS.gridWidth * LAYOUT_OPTIONS.xGridNum * -1;
+    for (var i = 0; i <= LAYOUT_OPTIONS.yGridNum; i++) {
+      let lineY = (i - 0.1) * LAYOUT_OPTIONS.gridHeight;
+      ctx.moveTo(minX, lineY);
+      ctx.lineTo(maxX, lineY);
+    }
+    ctx.font = "30px Arial";
+    ctx.fillStyle = "rgba(52, 52, 52, 0.6)";
+    ctx.textAlign = "center";
+    let minY = -0.1 * LAYOUT_OPTIONS.gridHeight;
+    let maxY = LAYOUT_OPTIONS.gridHeight * (LAYOUT_OPTIONS.yGridNum - 0.1);
+    for (var i = 0; i <= LAYOUT_OPTIONS.xGridNum; i++) {
+      let lineX = i * LAYOUT_OPTIONS.gridWidth * -1;
+      ctx.moveTo(lineX, minY);
+      ctx.lineTo(lineX, maxY);
+    }
+
+    for (var i = 0; i <= LAYOUT_OPTIONS.xGridNum; i++) {
+      let xlabel = gridPosToXLabel(-i);
+      let lineX = i * LAYOUT_OPTIONS.gridWidth * -1;
+      let yearTextX = lineX - LAYOUT_OPTIONS.gridWidth / 2;
+      for (var j = 1; j <= LAYOUT_OPTIONS.yGridNum; j++) {
+        let lineY = (j - 0.1) * LAYOUT_OPTIONS.gridHeight;
+        if (i < LAYOUT_OPTIONS.xGridNum) {
+          // Add year text
+          ctx.fillText(xlabel, yearTextX, lineY-5);
+        }
+        ctx.save();
+        ctx.rotate(-Math.PI / 2);
+        ctx.font = "30px Arial";
+        ctx.fillStyle = "rgba(52, 52, 52, 0.6)";
+        ctx.textAlign = "center";
+
+        // Add instance text
+        let ylabel = Object.keys(HIERARCHY)[7-j];
+        let instanceTextY = lineY - LAYOUT_OPTIONS.gridHeight / 2;
+        ctx.fillText(ylabel, -instanceTextY, lineX-5);
+        ctx.restore();
+
+      }
+    }
+
+    ctx.strokeStyle = "rgba(52, 52, 52, 0.8)"; //'#343434';
+    ctx.stroke();
 }
 
 function getNodeHierarchy(node) {
