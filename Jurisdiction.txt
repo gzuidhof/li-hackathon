@@ -1,9 +1,0 @@
-Jurisdiction
-
-Nederland: 99063
-Literatuur: 68949
-Lokaal: 66993
-Europa: 8185
-Regionaal: 5472
-Caribisch Nederland: 826
-Internationaal: 423
