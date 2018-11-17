@@ -1,11 +1,12 @@
-from flask import Flask, request, jsonify
-from werkzeug.exceptions import BadRequest
-from flask_cors import CORS, cross_origin
-from neo4j.v1 import GraphDatabase, basic_auth
-import pysolr
 import pprint
-from solr_parser import SolrParser
+
+import pysolr
+from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
+from werkzeug.exceptions import BadRequest
+
 from solr_client import get_documents
+from solr_parser import SolrParser
 
 app = Flask(__name__)
 CORS(app)
@@ -61,8 +62,7 @@ def document():
     else:
         raise BadRequest('Unknown mode '+mode)
     print(query)
-    result = session.run(query
-    )
+    result = session.run(query)
     docs = []
     references = []
     neo4j_id_to_doc_id = {}
@@ -104,9 +104,6 @@ def document():
 
 
 if __name__ == '__main__':
-    #driver = GraphDatabase.driver("bolt://localhost:7687", auth=basic_auth("neo4j", "timo"))
-    #session = driver.session()
-
     solr = pysolr.Solr('http://94.198.25.91:8080/solr/ACC_Legal_Slave', search_handler='/tvrh', results_cls=dict)
     solr_parser = SolrParser()
 

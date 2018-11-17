@@ -1,7 +1,6 @@
 import pysolr
 from solr_parser import SolrParser
 import pprint
-import sys
 
 solr = pysolr.Solr('http://94.198.25.91:8080/solr/ACC_Legal_Slave', search_handler='/tvrh', results_cls=dict)
 solr_parser = SolrParser()
